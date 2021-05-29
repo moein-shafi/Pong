@@ -35,6 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5px"
+            android:onClick="racketButton1Left"
             android:src="@drawable/up"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/score_ply1"
@@ -50,25 +51,27 @@
         android:id="@+id/score_ply2"/>
 
         <ImageButton
+            android:id="@+id/left_btn_ply2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/left"
             android:layout_marginRight="90px"
-            app:layout_constraintEnd_toStartOf="@id/right_btn_ply2"
+            android:onClick="racketButton2Left"
+            android:src="@drawable/left"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/score_ply2"
 
-            android:id="@+id/left_btn_ply2"/>
+            app:layout_constraintEnd_toStartOf="@id/right_btn_ply2"
+            app:layout_constraintTop_toBottomOf="@+id/score_ply2" />
 
         <ImageButton
+            android:id="@+id/right_btn_ply2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/right"
-            app:layout_constraintTop_toBottomOf="@+id/score_ply2"
+            android:onClick="racketButton2Right"
 
-            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/right"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:id="@+id/right_btn_ply2"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/score_ply2" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -82,7 +85,7 @@
 
 
             <com.example.pong.HexagonMaskView
-
+                android:id="@+id/hexagonBoard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 />
@@ -107,21 +110,25 @@
         android:layout_height="0dp"
         android:background="#77BDBF"
         android:layout_weight="2">
+
         <ImageButton
+            android:id="@+id/right_btn_ply1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="racketButton1Right"
             android:src="@drawable/down"
             app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/right_btn_ply1"
             tools:ignore="MissingConstraints" />
+
         <ImageButton
+            android:id="@+id/left_btn_ply3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/left"
             android:layout_marginRight="90px"
+            android:onClick="racketButton3Left"
+            android:src="@drawable/left"
             app:layout_constraintEnd_toStartOf="@id/right_btn_ply3"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/left_btn_ply3"/>
+            app:layout_constraintTop_toTopOf="parent" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -131,14 +138,16 @@
             app:layout_constraintTop_toBottomOf="@id/right_btn_ply3"
             app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/score_ply3"/>
+
         <ImageButton
+            android:id="@+id/right_btn_ply3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
+
+            android:onClick="racketButton3Right"
             android:src="@drawable/right"
-
-
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/right_btn_ply3"/>
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

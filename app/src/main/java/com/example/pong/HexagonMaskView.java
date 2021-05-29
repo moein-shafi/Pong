@@ -1,18 +1,13 @@
 package com.example.pong;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
 import android.util.AttributeSet;
-import android.util.Printer;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 public class HexagonMaskView extends View {
     private Path hexagonPath;
@@ -169,18 +164,81 @@ public class HexagonMaskView extends View {
                 this.racket3.getPaint());
     }
 
+    /// TODO: Check movement instead of replacement for rackets.
     public void racket1Left() {
-        this.initialXRacket1 = this.racket1.getX() - 10;
+        /// TODO: Change these magic number.
+        if (this.initialYRacket1 - 40 > 365) {
+            this.initialYRacket1 -= 40;
+            this.racket1.setY(this.initialYRacket1);
+            this.calculateRacket1Position();
+            this.invalidate();
+        }
+    }
+
+    public void racket1Right() {
+        /// TODO: Change these magic number.
+        if (this.initialYRacket1 + 40 < 750) {
+            this.initialYRacket1 += 40;
+            this.racket1.setY(this.initialYRacket1);
+            this.calculateRacket1Position();
+            this.invalidate();
+        }
+    }
+
+    public void racket2Left() {
+        /// TODO: Change these magic number.
+        if (this.initialYRacket2 - 40 > 105) {
+            this.initialXRacket2 -= Math.sqrt(3) * 40;
+            this.initialYRacket2 -= 40;
+            this.racket2.setY(this.initialYRacket2);
+            this.calculateRacket2Position();
+            this.invalidate();
+            System.out.println("L Y2 >>> " + this.initialYRacket2);
+        }
+    }
+
+    public void racket2Right() {
+        /// TODO: Change these magic number.
+        if (this.initialYRacket2 + 40 < 285) {
+            this.initialXRacket2 += Math.sqrt(3) * 40;
+            this.initialYRacket2 += 40;
+            this.racket2.setY(this.initialYRacket2);
+            this.calculateRacket2Position();
+            this.invalidate();
+        }
+    }
+
+    public void racket3Left() {
+        /// TODO: Change these magic number.
+        if (this.initialYRacket3 + 40 < 1000) {
+            this.initialXRacket3 -= Math.sqrt(3) * 40;
+            this.initialYRacket3 += 40;
+            this.racket3.setY(this.initialYRacket3);
+            this.calculateRacket3Position();
+            this.invalidate();
+        }
+    }
+
+    public void racket3Right() {
+        /// TODO: Change these magic number.
+        if (this.initialYRacket3 - 40 > 810) {
+            this.initialXRacket3 += Math.sqrt(3) * 40;
+            this.initialYRacket3 -= 40;
+            this.racket3.setY(this.initialYRacket3);
+            this.calculateRacket3Position();
+            this.invalidate();
+        }
     }
 
     // getting the view size and default radius
     @Override
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         width = MeasureSpec.getSize(widthMeasureSpec);
-        height =  MeasureSpec.getSize(heightMeasureSpec);
+        height = MeasureSpec.getSize(heightMeasureSpec);
         radius = height / 2 - 80;
-        initialXRacket1 = width / 2 - (float) (Math.sqrt(3) * radius / 2) ;
+
+        initialXRacket1 = width / 2 - (float) (Math.sqrt(3) * radius / 2);
         initialYRacket1 = height / 2;
         initialXRacket2 = width / 2 + (float) (Math.sqrt(3) * radius / 4);
         initialYRacket2 = (float) (height / 2 - 0.75 * radius);
@@ -189,6 +247,7 @@ public class HexagonMaskView extends View {
 
         this.calculateRacketsPosition();
         calculatePath();
+
     }
 
     private void calculateRacketsPosition() {
