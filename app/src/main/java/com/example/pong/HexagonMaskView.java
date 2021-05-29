@@ -151,7 +151,7 @@ public class HexagonMaskView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         width = MeasureSpec.getSize(widthMeasureSpec);
         height =  MeasureSpec.getSize(heightMeasureSpec);
-        radius = height / 2 -400;
+        radius = height / 2 -80;
         x1 = width / 2 - (float) (Math.sqrt(3) * radius / 2) ;
         y1 = height / 2;
         x2 = width / 2 + (float) (Math.sqrt(3) * radius / 4);
