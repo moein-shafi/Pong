@@ -20,52 +20,51 @@
         android:layout_height="0dp"
         android:background="#77BDBF"
         android:layout_weight="2">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="left"
-            android:layout_marginTop="5px"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/score_ply1"
-            android:id="@+id/left_btn_ply1"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="score: 0"
             android:textSize="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/left_btn_ply1"
-            app:layout_constraintBottom_toTopOf="@+id/right_btn_ply1"
-            android:id="@+id/score_ply1"/>
-        <Button
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/left_btn_ply1"
+            android:id="@+id/score_ply1"
+            tools:ignore="MissingConstraints" />
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="right"
-            app:layout_constraintTop_toBottomOf="@+id/score_ply1"
+            android:src="@drawable/up"
+            android:layout_marginTop="5px"
+            app:layout_constraintTop_toBottomOf="@id/score_ply1"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:id="@+id/right_btn_ply1"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="left"
-            android:layout_marginTop="5px"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/score_ply2"
-            android:id="@+id/left_btn_ply2"/>
+            android:id="@+id/left_btn_ply1"
+            tools:ignore="MissingConstraints" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="score: 0"
             android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/left_btn_ply2"
-            app:layout_constraintBottom_toTopOf="@+id/right_btn_ply2"
-            android:id="@+id/score_ply2"/>
-        <Button
+            app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/right_btn_ply2"
+        android:id="@+id/score_ply2"/>
+
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="right"
+            android:src="@drawable/left"
+            android:layout_marginRight="90px"
+            app:layout_constraintEnd_toStartOf="@id/right_btn_ply2"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/score_ply2"
+
+            android:id="@+id/left_btn_ply2"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right"
+            app:layout_constraintTop_toBottomOf="@+id/score_ply2"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/right_btn_ply2"/>
@@ -114,30 +113,38 @@
         android:layout_height="0dp"
         android:background="#77BDBF"
         android:layout_weight="2">
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="left"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/down"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/score_ply3"
+            android:id="@+id/right_btn_ply1"
+            tools:ignore="MissingConstraints" />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/left"
+            android:layout_marginRight="90px"
+            app:layout_constraintEnd_toStartOf="@id/right_btn_ply3"
+            app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/left_btn_ply3"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="score: 0"
             android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/right_btn_ply3"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/left_btn_ply3"
-            app:layout_constraintBottom_toTopOf="@+id/right_btn_ply3"
             android:id="@+id/score_ply3"/>
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="right"
-            app:layout_constraintTop_toBottomOf="@+id/score_ply3"
+            android:src="@drawable/right"
+
+
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/right_btn_ply3"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
