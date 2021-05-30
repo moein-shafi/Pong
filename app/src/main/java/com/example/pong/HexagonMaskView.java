@@ -18,9 +18,9 @@ public class HexagonMaskView extends View {
     private float radius;
     private float width, height;
     private int maskColor;
-    Racket racket1;
-    Racket racket2;
-    Racket racket3;
+    private Racket racket1;
+    private Racket racket2;
+    private Racket racket3;
     float centerX;
     float centerY;
     float triangleHeight;
@@ -55,6 +55,20 @@ public class HexagonMaskView extends View {
         super(context, attrs, defStyleAttr);
         init();
     }
+
+    public Racket getRacket1() {
+        return  racket1;
+    }
+
+    public Racket getRacket2() {
+        return  racket2;
+    }
+
+    public Racket getRacket3() {
+        return  racket3;
+    }
+
+
 
     public float getCenterX() {
         return this.centerX;
