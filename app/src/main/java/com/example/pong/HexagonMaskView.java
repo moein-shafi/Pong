@@ -7,7 +7,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
 import android.util.AttributeSet;
+import android.util.Pair;
 import android.view.View;
+
+import java.util.ArrayList;
 
 public class HexagonMaskView extends View {
     private Path hexagonPath;
@@ -18,6 +21,12 @@ public class HexagonMaskView extends View {
     Racket racket1;
     Racket racket2;
     Racket racket3;
+    float centerX;
+    float centerY;
+    float triangleHeight;
+    ArrayList<Pair<Float, Float>> coordinations = new ArrayList<>();
+
+
 
     //    private float x1 = width / 2 - (float) (Math.sqrt(3) * radius / 2);
 //    private float y1 = height / 2;
@@ -47,6 +56,15 @@ public class HexagonMaskView extends View {
         init();
     }
 
+    public float getCenterX() {
+        return this.centerX;
+    }
+
+    public float getCenterY() {
+        return this.centerY;
+    }
+
+
     private void init() {
         hexagonPath = new Path();
         hexagonBorderPath = new Path();
@@ -69,18 +87,32 @@ public class HexagonMaskView extends View {
         invalidate();
     }
 
+    public void initiateCoordinations() {
+        coordinations.add(new Pair(centerX, centerY + radius));
+        coordinations.add(new Pair(centerX - triangleHeight, centerY + radius/2));
+        coordinations.add(new Pair(centerX - triangleHeight, centerY - radius/2));
+        coordinations.add(new Pair(centerX, centerY - radius));
+        coordinations.add(new Pair(centerX + triangleHeight, centerY - radius/2));
+        coordinations.add(new Pair(centerX + triangleHeight, centerY + radius/2));
+    }
+
+    public ArrayList<Pair<Float, Float>> getCoordinations() {
+        return this.coordinations;
+    }
+
     private void calculatePath() {
-        float triangleHeight = (float) (Math.sqrt(3) * radius / 2);
-        float centerX = width/2;
-        float centerY = height/2;
+        this.triangleHeight = (float) (Math.sqrt(3) * radius / 2);
+        this.centerX = width / 2;
+        this.centerY = height / 2;
+
+        hexagonPath.moveTo(centerX, centerY + radius);
+        this.initiateCoordinations();
+
+        for (Pair coordination : this.coordinations)
+            hexagonPath.lineTo((float)coordination.first , (float)coordination.second);
         hexagonPath.moveTo(centerX, centerY + radius);
 
-        hexagonPath.lineTo(centerX - triangleHeight, centerY + radius/2);
-        hexagonPath.lineTo(centerX - triangleHeight, centerY - radius/2);
-        hexagonPath.lineTo(centerX, centerY - radius);
-        hexagonPath.lineTo(centerX + triangleHeight, centerY - radius/2);
-        hexagonPath.lineTo(centerX + triangleHeight, centerY + radius/2);
-        hexagonPath.moveTo(centerX, centerY + radius);
+
 //        hexagonPath.lineTo((float) (centerX - 0.95 *width/2), centerY + radius);
 //        hexagonPath.moveTo((float) (centerX - 0.95 *width/2), centerY + radius);
 //        hexagonPath.lineTo((float) (centerX - 0.95 *width/2), centerY - radius);
