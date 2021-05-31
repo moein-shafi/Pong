@@ -96,27 +96,47 @@ public class Ball {
         this.vy0 = 0;
     }
 
+    private void decreasePlayerScore() {
+        switch (lastHit) {
+            case 1:
+                this.player1.decreaseScore();
+                break;
+            case 2:
+                this.player2.decreaseScore();
+                break;
+            case 3:
+                this.player3.decreaseScore();
+                break;
+        }
+        this.vx0 = 0;
+        this.vy0 = 0;
+    }
+
     private void increaseVelocity() {
         this.vx0 *= MainActivity.BALL_INCREASE_V_RATIO;
         this.vy0 *= MainActivity.BALL_INCREASE_V_RATIO;
     }
 
+    private void collideBallFromWall(int WallId) {
+        float tangential = (float) Math.atan(this.boardLines.get(WallId).first);
+        float tangentialX = (float) (1 * Math.cos(tangential));
+        float tangentialY = (float) (1 * Math.sin(tangential));
+
+        float normX = -tangentialY;
+        float normY = tangentialX;
+        float vNorm = vx0 * normX + vy0 * normY;
+        float vTangential = vx0 * tangentialX + vy0 * tangentialY;
+        vx0 = -vNorm * normX + vTangential * tangentialX;
+        vy0 = -vNorm * normY + vTangential * tangentialY;
+    }
+
     private void checkCollision() {
-        if (this.y0 + 2 * this.radius > this.x0 * (float)this.boardLines.get(0).first + (float)this.boardLines.get(0).second) {
-
-            float Tan = (float) Math.atan(this.vx0 / this.vy0);
-            float v = (float) Math.sqrt(Math.pow(this.vx0, 2) + Math.pow(this.vy0, 2));
-
-            float degree = (float)(-Math.toDegrees(Tan) - 60);
-            if (Math.abs(degree) < 0.01)
-                degree = 0;
-            this.vx0 = (float) (v * Math.sin(degree));
-            this.vy0 = -(float) (v * Math.cos(degree));
-
+        if (this.y0 + 2 * this.radius > (this.x0 * (float)this.boardLines.get(0).first + (float)this.boardLines.get(0).second)) {
+            collideBallFromWall(0);
             this.y0 -= MainActivity.WALL_MINIMUM_THRESHOLD;
         }
 
-        if (this.x0 <= (float)this.coordinations.get(1).first) {
+        else if (this.x0 <= (float)this.coordinations.get(1).first) {
             if (this.y0 > racket1.getStartY() && this.y0 < racket1.getStopY() ||
                     this.y0 + 2 * radius > racket1.getStartY() && this.y0  + 2 * radius < racket1.getStopY()) {
                 this.vx0 *= -1;
@@ -125,74 +145,55 @@ public class Ball {
             }
 
             else {
-                this.increasePlayerScore();
+                if (lastHit == 1)
+                    this.decreasePlayerScore();
+                else
+                    this.increasePlayerScore();
             }
+            this.x0 += MainActivity.WALL_MINIMUM_THRESHOLD;
         }
 
-        if (this.y0 < this.x0 * (float)this.boardLines.get(2).first + (float)this.boardLines.get(2).second) {
-            float Tan = (float) Math.atan(this.vx0 / this.vy0);
-            float v = (float) Math.sqrt(Math.pow(this.vx0, 2) + Math.pow(this.vy0, 2));
-
-            float degree = (float)(Math.toDegrees(Tan) - 60);
-            if (Math.abs(degree) < 0.01)
-                degree = 0;
-            this.vx0 = (float) (v * Math.sin(degree));
-            this.vy0 = (float) (v * Math.cos(degree));
-
+        else if (this.y0 < (this.x0 * (float)this.boardLines.get(2).first + (float)this.boardLines.get(2).second)) {
+            collideBallFromWall(2);
             this.y0 += MainActivity.WALL_MINIMUM_THRESHOLD;
 
         }
 
-        if (this.y0 < (this.x0 + 2 * radius) * (float)this.boardLines.get(3).first + (float)this.boardLines.get(3).second) {
-
+        else if (this.y0 < (this.x0 + 2 * radius) * (float)this.boardLines.get(3).first + (float)this.boardLines.get(3).second) {
             if (this.x0 > racket2.getStartX() && this.x0 < racket2.getStopX() ||
                     this.x0 + 2 * radius > racket2.getStartX() && this.x0 + 2 * radius < racket2.getStopX()) {
                 lastHit = 2;
-
-                float Tan = (float) Math.atan(this.vx0 / this.vy0);
-                float v = (float) Math.sqrt(Math.pow(this.vx0, 2) + Math.pow(this.vy0, 2));
-
-                float degree = (float) (-Math.toDegrees(Tan) - 60);
-                if (Math.abs(degree) < 0.01)
-                    degree = 0;
-                this.vx0 = (float) (v * Math.sin(degree));
-                this.vy0 = (float) (v * Math.cos(degree));
-
+                collideBallFromWall(3);
                 this.y0 += MainActivity.WALL_MINIMUM_THRESHOLD;
                 this.increaseVelocity();
-
             }
             else {
-                this.increasePlayerScore();
+                if (lastHit == 2)
+                    this.decreasePlayerScore();
+                else
+                    this.increasePlayerScore();
             }
         }
 
-        if (this.x0 + 2 * this.radius >= (float)this.coordinations.get(4).first) {
+        else if (this.x0 + 2 * this.radius >= (float)this.coordinations.get(4).first) {
             this.vx0 *= -1;
+            this.x0 -= MainActivity.WALL_MINIMUM_THRESHOLD;
         }
 
-        if (this.y0 + 2 * this.radius > (this.x0 + 2 * radius) * (float)this.boardLines.get(5).first + (float)this.boardLines.get(5).second) {
-
+        else if (this.y0 + 2 * this.radius > (this.x0 + 2 * radius) * (float)this.boardLines.get(5).first + (float)this.boardLines.get(5).second) {
             if (this.x0 > racket3.getStopX() && this.x0 < racket3.getStartX() ||
                     this.x0 + 2 * radius > racket3.getStopX() && this.x0 + 2 * radius < racket3.getStartX()) {
                 lastHit = 3;
-
-                float Tan = (float) Math.atan(this.vx0 / this.vy0);
-                float v = (float) Math.sqrt(Math.pow(this.vx0, 2) + Math.pow(this.vy0, 2));
-
-                float degree = (float) (Math.toDegrees(Tan) - 60);
-                if (Math.abs(degree) < 0.01)
-                    degree = 0;
-                this.vx0 = (float) (v * Math.sin(degree));
-                this.vy0 = -(float) (v * Math.cos(degree));
-
+                collideBallFromWall(5);
                 this.y0 -= MainActivity.WALL_MINIMUM_THRESHOLD;
                 this.increaseVelocity();
-
             }
 
             else {
-                this.increasePlayerScore();
+                if (lastHit == 3)
+                    this.decreasePlayerScore();
+                else
+                    this.increasePlayerScore();
             }
         }
 

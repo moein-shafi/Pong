@@ -16,7 +16,10 @@ public class Player {
 
     public void increaseScore() {
         this.score += 1;
-//        MainActivity.setText(id, score);
+    }
+
+    public void decreaseScore() {
+        this.score -= 1;
     }
 
     public int getId() {

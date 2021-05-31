@@ -174,8 +174,6 @@ public class HexagonMaskView extends View {
     }
 
     public void racket1Right() {
-        System.out.println("Y Stop: "+(initialYRacket1 + (radius/10)));
-        System.out.println("point 1 Y: "+ this.coordinations.get(1).second);
         if (this.initialYRacket1 + (radius/10) + MainActivity.Rocket_Movement <= (float)this.coordinations.get(1).second) {
             this.initialYRacket1 += MainActivity.Rocket_Movement;
             this.calculateRacket1Position();
