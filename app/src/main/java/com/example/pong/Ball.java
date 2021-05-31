@@ -9,7 +9,6 @@ import java.util.ArrayList;
 public class Ball {
     float x0, y0;
     float vx0, vy0;
-    float mass;
 
     int radius;
     ImageView imageView;
@@ -27,14 +26,13 @@ public class Ball {
     private final float defaultVx0;
     private final float defaultVy0;
 
-    public Ball(float x0, float y0, float vx0, float vy0, float mass, int radius, ImageView imageView) {
+    public Ball(float x0, float y0, float vx0, float vy0, int radius, ImageView imageView) {
         this.x0 = x0;
         this.y0 = y0;
         this.vx0 = vx0;
         this.defaultVx0 = vx0;
         this.vy0 = vy0;
         this.defaultVy0 = vy0;
-        this.mass = mass;
         this.imageView = imageView;
         this.radius = radius;
         this.imageView.getLayoutParams().width = 2 * this.radius;
@@ -99,12 +97,10 @@ public class Ball {
     }
 
     private void increaseVelocity() {
-        /// TODO: check this magic number.
-        this.vx0 *= 1.05;
-        this.vy0 *= 1.05;
+        this.vx0 *= MainActivity.BALL_INCREASE_V_RATIO;
+        this.vy0 *= MainActivity.BALL_INCREASE_V_RATIO;
     }
 
-    /// TODO: check attack feature from rackets.
     private void checkCollision() {
         if (this.y0 + 2 * this.radius > this.x0 * (float)this.boardLines.get(0).first + (float)this.boardLines.get(0).second) {
 
@@ -117,7 +113,6 @@ public class Ball {
             this.vx0 = (float) (v * Math.sin(degree));
             this.vy0 = -(float) (v * Math.cos(degree));
 
-            /// TODO: check this magic number.
             this.y0 -= MainActivity.WALL_MINIMUM_THRESHOLD;
         }
 
@@ -144,7 +139,6 @@ public class Ball {
             this.vx0 = (float) (v * Math.sin(degree));
             this.vy0 = (float) (v * Math.cos(degree));
 
-            /// TODO: check this magic number.
             this.y0 += MainActivity.WALL_MINIMUM_THRESHOLD;
 
         }
@@ -164,7 +158,6 @@ public class Ball {
                 this.vx0 = (float) (v * Math.sin(degree));
                 this.vy0 = (float) (v * Math.cos(degree));
 
-                /// TODO: check this magic number.
                 this.y0 += MainActivity.WALL_MINIMUM_THRESHOLD;
                 this.increaseVelocity();
 
@@ -193,7 +186,6 @@ public class Ball {
                 this.vx0 = (float) (v * Math.sin(degree));
                 this.vy0 = -(float) (v * Math.cos(degree));
 
-                /// TODO: check this magic number.
                 this.y0 -= MainActivity.WALL_MINIMUM_THRESHOLD;
                 this.increaseVelocity();
 

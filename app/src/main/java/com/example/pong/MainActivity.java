@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -17,10 +18,15 @@ public class MainActivity extends AppCompatActivity {
     public static final int ACCELERATION_SCALE = 100;
     public static final int V_MINIMUM_THRESHOLD = 200;
     public static final int WALL_MINIMUM_THRESHOLD = 10;
-    public static final int Rocket_Movement = 20;
+    public static final int Rocket_Movement = 30;
+    public static final int MIN_BALL_V = 40;
+    public static final int MAX_BALL_V = 60;
+    public static final float BALL_INCREASE_V_RATIO = 1.05f;
+    public static final int RACKET_SIZE = 8;
+
     Ball ball;
     Board board;
-    int ballRadius = 40;
+    int ballRadius = 30;
     float deltaT = 0.1f;
     Player player1;
     Player player2;
@@ -38,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ImageView ballImage = findViewById(R.id.ball);
+
         HexagonMaskView hexaView = findViewById(R.id.hexagonBoard);
         player1Score = (TextView)findViewById(R.id.score_ply1);
         player2Score = (TextView)findViewById(R.id.score_ply2);
@@ -51,19 +58,25 @@ public class MainActivity extends AppCompatActivity {
         ImageView goalView = findViewById(R.id.goal);
         goalView.setVisibility(View.INVISIBLE);
 
-        /// TODO: set all buttons (except start_game button) INVISIBLE.
-        /// TODO: set vx and vy by random numbers (+ random direction).
-        /// TODO: check 'mass'.
         this.ball = new Ball(
                 hexaView.getCenterX(),    // not correct at this point.
                 hexaView.getCenterY(),    // not correct at this point.
-                50,
-                    -50,
-//                -(float) (50 * Math.sqrt(3) / 3),
-                0.01f,
+                getRandomV(),
+                getRandomV(),
                 this.ballRadius,
                 ballImage
         );
+    }
+
+    private int getRandomV() {
+        Random randomDirection = new Random();
+        Random randomValue = new Random();
+        int direction = 1;
+
+        int rand_int1 = randomDirection.nextInt(10);
+        if (rand_int1 < 5)
+            direction = -1;
+        return (int)(((Math.random() * ((MAX_BALL_V - MIN_BALL_V) + 1)) + MIN_BALL_V) * direction);
     }
 
     public void startGame(View view) {
@@ -79,6 +92,16 @@ public class MainActivity extends AppCompatActivity {
         this.ball.setPlayer3(this.player3);
 
         findViewById(R.id.start_button).setVisibility(View.INVISIBLE);
+        findViewById(R.id.right_btn_ply1).setVisibility(View.VISIBLE);
+        findViewById(R.id.right_btn_ply2).setVisibility(View.VISIBLE);
+        findViewById(R.id.right_btn_ply3).setVisibility(View.VISIBLE);
+        findViewById(R.id.left_btn_ply1).setVisibility(View.VISIBLE);
+        findViewById(R.id.left_btn_ply2).setVisibility(View.VISIBLE);
+        findViewById(R.id.left_btn_ply3).setVisibility(View.VISIBLE);
+        findViewById(R.id.score_ply1).setVisibility(View.VISIBLE);
+        findViewById(R.id.score_ply2).setVisibility(View.VISIBLE);
+        findViewById(R.id.score_ply3).setVisibility(View.VISIBLE);
+
         this.ball.setX0(hexaView.getCenterX());
         this.ball.setY0(hexaView.getCenterY());
 
@@ -99,9 +122,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 findViewById(R.id.goal).setVisibility(View.INVISIBLE);
-                /// TODO: set this with random directions;
-                ball.setVx0(40);
-                ball.setVy0(-40);
+                ball.setVx0(getRandomV());
+                ball.setVy0(getRandomV());
             }
         },2000);
     }

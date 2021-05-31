@@ -25,15 +25,6 @@ public class HexagonMaskView extends View {
     float centerY;
     float triangleHeight;
     ArrayList<Pair<Float, Float>> coordinations = new ArrayList<>();
-
-
-
-    //    private float x1 = width / 2 - (float) (Math.sqrt(3) * radius / 2);
-//    private float y1 = height / 2;
-//    private float x2 = width / 2 + (float) (Math.sqrt(3) * radius / 4) - 5;
-//    private float y2 = (float) (height/2 - 0.75*radius);
-//    private float x3 = width / 2 + (float) (Math.sqrt(3) * radius / 4) - 5;
-//    private float y3 = (float) (height/2 + 0.75*radius);
     private float initialXRacket1;
     private float initialXRacket2;
     private float initialXRacket3;
@@ -68,8 +59,6 @@ public class HexagonMaskView extends View {
         return  racket3;
     }
 
-
-
     public float getCenterX() {
         return this.centerX;
     }
@@ -78,17 +67,13 @@ public class HexagonMaskView extends View {
         return this.centerY;
     }
 
-
     private void init() {
         hexagonPath = new Path();
         hexagonBorderPath = new Path();
-//        maskColor = 0x8BBDD9;
-
         maskColor = Color.rgb(119,189,191);
         this.racket1 = new Racket(Color.BLUE, 30);
         this.racket2 = new Racket(Color.RED, 30);
         this.racket3 = new Racket(Color.MAGENTA, 30);
-
     }
 
     public void setRadius(float r) {
@@ -102,13 +87,6 @@ public class HexagonMaskView extends View {
     }
 
     public void initiateCoordinations() {
-//        this.initialYRacket1 = centerY;
-//        System.out.println("initial y  racket1 plus :"+ this.racket1.getY());
-//        System.out.println("================================================");
-//        System.out.println("initial racket plus :"+ initialYRacket1);
-//        System.out.println("================================================");
-//        calculateRacket1Position();
-//        System.out.println("initial y racket1 afyer calc plus :"+ this.racket1.getY());
         coordinations.add(new Pair(centerX, centerY + radius));
         coordinations.add(new Pair(centerX - triangleHeight, centerY + radius/2));
         coordinations.add(new Pair(centerX - triangleHeight, centerY - radius/2));
@@ -125,40 +103,11 @@ public class HexagonMaskView extends View {
         this.triangleHeight = (float) (Math.sqrt(3) * radius / 2);
         this.centerX = width / 2;
         this.centerY = height / 2;
-
-        System.out.println("================================================");
-        System.out.println("height in path :"+ height);
-        System.out.println("================================================");
-
         hexagonPath.moveTo(centerX, centerY + radius);
-//        this.initiateCoordinations();
 
         for (Pair coordination : this.coordinations){
-//            System.out.println("first: "+coordination.first);
-//            System.out.println("second: "+coordination.second);
             hexagonPath.lineTo((float)coordination.first , (float)coordination.second);}
         hexagonPath.moveTo(centerX, centerY + radius);
-
-
-//        hexagonPath.lineTo((float) (centerX - 0.95 *width/2), centerY + radius);
-//        hexagonPath.moveTo((float) (centerX - 0.95 *width/2), centerY + radius);
-//        hexagonPath.lineTo((float) (centerX - 0.95 *width/2), centerY - radius);
-//        hexagonPath.lineTo(centerX -radius/2, centerY - radius/2);
-//        hexagonPath.lineTo(centerX + radius/2, centerY - radius/2);
-//        hexagonPath.lineTo(centerX +radius/2, centerY + radius/2);
-//        hexagonPath.moveTo(centerX+radius/2, centerY + radius/2);
-//
-
-//        hexagonBorderPath.moveTo(centerX, centerY + radiusBorder);
-//        hexagonBorderPath.lineTo(centerX - triangleBorderHeight, centerY + radiusBorder/2);
-//        hexagonBorderPath.moveTo(centerX, centerY + radiusBorder);
-//        hexagonBorderPath.lineTo(centerX - triangleBorderHeight, centerY - radiusBorder/2);
-//        hexagonBorderPath.lineTo(centerX, centerY - radiusBorder);
-//        hexagonBorderPath.lineTo(centerX + triangleBorderHeight, centerY - radiusBorder/2);
-//        hexagonBorderPath.moveTo(centerX-triangleBorderHeight, centerY + radiusBorder/2);
-//        hexagonBorderPath.lineTo(centerX + triangleBorderHeight, centerY + radiusBorder/2);
-//        hexagonBorderPath.moveTo(centerX-triangleBorderHeight, centerY + radiusBorder/2);
-//        hexagonBorderPath.moveTo(centerX, centerY + radiusBorder);
         invalidate();
     }
 
@@ -175,17 +124,12 @@ public class HexagonMaskView extends View {
         float centerY = height/2;
         float radiusBorder = radius + 30;
         float triangleBorderHeight = (float) (Math.sqrt(3) * radiusBorder / 2);
-//        Canvas c = new Canvas();
         Paint p = new Paint();
         p.setColor(Color.BLACK);
         p.setStrokeWidth(10);
 
         this.drawRackets(c);
 
-//        c.drawLine(centerX-triangleBorderHeight,
-//                centerY + radiusBorder/2,
-//                centerX - triangleBorderHeight,
-//                centerY - radiusBorder/2,p);
         c.drawLine(centerX-triangleBorderHeight,
                 centerY + radiusBorder/2,
                 centerX - triangleBorderHeight,
@@ -198,9 +142,6 @@ public class HexagonMaskView extends View {
                 centerY + radiusBorder/2,
                 centerX ,
                 centerY + radiusBorder,p);
-//        c.drawCircle(centerX,centerY,radius/5,p_racket);
-//        Bitmap bMap = BitmapFactory.decodeFile("/draw");
-//        c.drawBitmap();
     }
 
     public void drawRackets(Canvas c) {
@@ -225,12 +166,8 @@ public class HexagonMaskView extends View {
 
 
     public void racket1Left() {
-        System.out.println("Y Start: "+ (this.initialYRacket1));
-        System.out.println("If cond: "+(this.initialYRacket1 - (radius/10) - MainActivity.Rocket_Movement));
-        System.out.println("point 2 Y: "+ this.coordinations.get(2).second);
-        if ((this.initialYRacket1 - (radius/10) - MainActivity.Rocket_Movement) >= (float)this.coordinations.get(2).second) {
+        if ((this.initialYRacket1 - (radius/8) - MainActivity.Rocket_Movement) >= (float)this.coordinations.get(2).second) {
             this.initialYRacket1 -= MainActivity.Rocket_Movement;
-//            this.racket1.setY(this.initialYRacket1);
             this.calculateRacket1Position();
             this.invalidate();
         }
@@ -241,7 +178,6 @@ public class HexagonMaskView extends View {
         System.out.println("point 1 Y: "+ this.coordinations.get(1).second);
         if (this.initialYRacket1 + (radius/10) + MainActivity.Rocket_Movement <= (float)this.coordinations.get(1).second) {
             this.initialYRacket1 += MainActivity.Rocket_Movement;
-//            this.racket1.setY(this.initialYRacket1);
             this.calculateRacket1Position();
             this.invalidate();
         }
@@ -250,42 +186,27 @@ public class HexagonMaskView extends View {
     public void racket2Left() {
 
         if (this.racket2.getStartY() - MainActivity.Rocket_Movement > (float)this.coordinations.get(3).second) {
-            this.initialXRacket2 -= Math.sqrt(3) * MainActivity.Rocket_Movement / 2;
-            this.initialYRacket2 -= MainActivity.Rocket_Movement / 2;
-//            this.racket2.setY(this.initialYRacket2);
-//            this.racket2.setX(this.initialXRacket2);
+            this.initialXRacket2 -= Math.sqrt(3) * MainActivity.Rocket_Movement;
+            this.initialYRacket2 -= MainActivity.Rocket_Movement;
             this.calculateRacket2Position();
             this.invalidate();
-            System.out.println("L Y2 >>> " + this.initialYRacket2);
         }
     }
 
     public void racket2Right() {
 
         if (this.racket2.getStopY() + MainActivity.Rocket_Movement <= (float)this.coordinations.get(4).second) {
-            this.initialXRacket2 += Math.sqrt(3) * MainActivity.Rocket_Movement / 2;
-            this.initialYRacket2 += MainActivity.Rocket_Movement / 2;
-//            this.racket2.setY(this.initialYRacket2);
-//            this.racket2.setX(this.initialXRacket2);
+            this.initialXRacket2 += Math.sqrt(3) * MainActivity.Rocket_Movement;
+            this.initialYRacket2 += MainActivity.Rocket_Movement;
             this.calculateRacket2Position();
             this.invalidate();
         }
     }
 
     public void racket3Left() {
-
-//        if (this.initialYRacket3 + MainActivity.Rocket_Movement < (float)this.coordinations.get(0).second) {
-//            this.initialXRacket3 -= Math.sqrt(3) * MainActivity.Rocket_Movement;
-//            this.initialYRacket3 += MainActivity.Rocket_Movement;
-//            this.racket3.setY(this.initialYRacket3);
-//            this.calculateRacket3Position();
-//            this.invalidate();
-//        }
-        if (this.racket3.getStartY() + MainActivity.Rocket_Movement < (float)this.coordinations.get(0).second) {
-            this.initialXRacket3 -= Math.sqrt(3) * MainActivity.Rocket_Movement / 2;
-            this.initialYRacket3 += MainActivity.Rocket_Movement / 2;
-//            this.racket3.setY(this.initialYRacket3);
-//            this.racket3.setX(this.initialXRacket3);
+        if (this.racket3.getStopY() + MainActivity.Rocket_Movement <= (float)this.coordinations.get(0).second) {
+            this.initialXRacket3 -= Math.sqrt(3) * MainActivity.Rocket_Movement;
+            this.initialYRacket3 += MainActivity.Rocket_Movement;
             this.calculateRacket3Position();
             this.invalidate();
         }
@@ -293,11 +214,9 @@ public class HexagonMaskView extends View {
 
     public void racket3Right() {
 
-        if (this.racket3.getStopY() - MainActivity.Rocket_Movement > (float)this.coordinations.get(5).second) {
-            this.initialXRacket3 += Math.sqrt(3) * MainActivity.Rocket_Movement / 2;
-            this.initialYRacket3 -= MainActivity.Rocket_Movement / 2;
-//            this.racket3.setY(this.initialYRacket3);
-//            this.racket3.setX(this.initialXRacket3);
+        if (this.racket3.getStartY() - MainActivity.Rocket_Movement >= (float)this.coordinations.get(5).second) {
+            this.initialXRacket3 += Math.sqrt(3) * MainActivity.Rocket_Movement;
+            this.initialYRacket3 -= MainActivity.Rocket_Movement;
             this.calculateRacket3Position();
             this.invalidate();
         }
@@ -313,18 +232,9 @@ public class HexagonMaskView extends View {
         this.triangleHeight = (float) (Math.sqrt(3) * radius / 2);
         this.centerX = width / 2;
         this.centerY = height / 2;
-//        initialXRacket1 = width / 2 - (float) (Math.sqrt(3) * radius / 2);
-//        initialYRacket1 = height / 2;
-//        initialXRacket2 = width / 2 + (float) (Math.sqrt(3) * radius / 4);
-//        initialYRacket2 = (float) (height / 2 - 0.75 * radius);
-//        initialXRacket3 = width / 2 + (float) (Math.sqrt(3) * radius / 4);
-//        initialYRacket3 = (float) (height / 2 + 0.75 * radius);
-        System.out.println("================================================");
-        System.out.println("height in Mesuare :"+ height);
-        System.out.println("================================================");
         initialXRacket1 = centerX - triangleHeight;
         initialYRacket1 = centerY;
-        initialXRacket2 = centerX + triangleHeight/2;
+        initialXRacket2 = centerX + triangleHeight / 2;
         initialYRacket2 = (float) (centerY - 0.75 * radius);
         initialXRacket3 = centerX + (float) (triangleHeight/2);
         initialYRacket3 = (float) (centerY + 0.75 * radius);
@@ -345,26 +255,26 @@ public class HexagonMaskView extends View {
         this.racket1.setY(this.initialYRacket1);
         this.racket1.setStartX(this.initialXRacket1);
         this.racket1.setStopX(this.initialXRacket1);
-        this.racket1.setStartY(this.initialYRacket1 - radius / 10);
-        this.racket1.setStopY(this.initialYRacket1 + radius / 10);
+        this.racket1.setStartY(this.initialYRacket1 - radius / MainActivity.RACKET_SIZE);
+        this.racket1.setStopY(this.initialYRacket1 + radius / MainActivity.RACKET_SIZE);
     }
 
     private void calculateRacket2Position() {
         this.racket2.setX(this.initialXRacket2);
         this.racket1.setY(this.initialYRacket2);
-        this.racket2.setStartX((float) (this.initialXRacket2 - Math.sqrt(3) * radius / 20));
-        this.racket2.setStopX((float) (this.initialXRacket2 + Math.sqrt(3) * radius / 20));
-        this.racket2.setStartY(this.initialYRacket2 - radius / 20);
-        this.racket2.setStopY(this.initialYRacket2 + radius / 20);
+        this.racket2.setStartX((float) (this.initialXRacket2 - Math.sqrt(3) * radius / (MainActivity.RACKET_SIZE * 2)));
+        this.racket2.setStopX((float) (this.initialXRacket2 + Math.sqrt(3) * radius / (MainActivity.RACKET_SIZE * 2)));
+        this.racket2.setStartY(this.initialYRacket2 - radius / (MainActivity.RACKET_SIZE * 2));
+        this.racket2.setStopY(this.initialYRacket2 + radius / (MainActivity.RACKET_SIZE * 2));
     }
 
     private void calculateRacket3Position() {
         this.racket3.setX(this.initialXRacket3);
         this.racket1.setY(this.initialYRacket3);
-        this.racket3.setStartX((float) (this.initialXRacket3 + Math.sqrt(3) * radius / 20));
-        this.racket3.setStopX((float) (this.initialXRacket3 - Math.sqrt(3) * radius / 20));
-        this.racket3.setStartY(this.initialYRacket3 - radius / 20);
-        this.racket3.setStopY(this.initialYRacket3 + radius / 20);
+        this.racket3.setStartX((float) (this.initialXRacket3 + Math.sqrt(3) * radius / (MainActivity.RACKET_SIZE * 2)));
+        this.racket3.setStopX((float) (this.initialXRacket3 - Math.sqrt(3) * radius / (MainActivity.RACKET_SIZE * 2)));
+        this.racket3.setStartY(this.initialYRacket3 - radius / (MainActivity.RACKET_SIZE * 2));
+        this.racket3.setStopY(this.initialYRacket3 + radius / (MainActivity.RACKET_SIZE * 2));
     }
 
 }
