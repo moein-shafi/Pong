@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int ACCELERATION_SCALE = 100;
     public static final int V_MINIMUM_THRESHOLD = 200;
     public static final int WALL_MINIMUM_THRESHOLD = 10;
+    public static final int Rocket_Movement = 20;
     Ball ball;
     Board board;
     int ballRadius = 40;
