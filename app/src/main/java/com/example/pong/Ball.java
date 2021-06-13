@@ -113,8 +113,8 @@ public class Ball {
     }
 
     private void increaseVelocity() {
-        this.vx0 *= MainActivity.BALL_INCREASE_V_RATIO;
-        this.vy0 *= MainActivity.BALL_INCREASE_V_RATIO;
+        this.vx0 *= SingleDeviceActivity.BALL_INCREASE_V_RATIO;
+        this.vy0 *= SingleDeviceActivity.BALL_INCREASE_V_RATIO;
     }
 
     private void collideBallFromWall(int WallId) {
@@ -133,7 +133,7 @@ public class Ball {
     private void checkCollision() {
         if (this.y0 + 2 * this.radius > (this.x0 * (float)this.boardLines.get(0).first + (float)this.boardLines.get(0).second)) {
             collideBallFromWall(0);
-            this.y0 -= MainActivity.WALL_MINIMUM_THRESHOLD;
+            this.y0 -= SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
         }
 
         else if (this.x0 <= (float)this.coordinations.get(1).first) {
@@ -150,12 +150,12 @@ public class Ball {
                 else
                     this.increasePlayerScore();
             }
-            this.x0 += MainActivity.WALL_MINIMUM_THRESHOLD;
+            this.x0 += SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
         }
 
         else if (this.y0 < (this.x0 * (float)this.boardLines.get(2).first + (float)this.boardLines.get(2).second)) {
             collideBallFromWall(2);
-            this.y0 += MainActivity.WALL_MINIMUM_THRESHOLD;
+            this.y0 += SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
 
         }
 
@@ -164,7 +164,7 @@ public class Ball {
                     this.x0 + 2 * radius > racket2.getStartX() && this.x0 + 2 * radius < racket2.getStopX()) {
                 lastHit = 2;
                 collideBallFromWall(3);
-                this.y0 += MainActivity.WALL_MINIMUM_THRESHOLD;
+                this.y0 += SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
                 this.increaseVelocity();
             }
             else {
@@ -177,7 +177,7 @@ public class Ball {
 
         else if (this.x0 + 2 * this.radius >= (float)this.coordinations.get(4).first) {
             this.vx0 *= -1;
-            this.x0 -= MainActivity.WALL_MINIMUM_THRESHOLD;
+            this.x0 -= SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
         }
 
         else if (this.y0 + 2 * this.radius > (this.x0 + 2 * radius) * (float)this.boardLines.get(5).first + (float)this.boardLines.get(5).second) {
@@ -185,7 +185,7 @@ public class Ball {
                     this.x0 + 2 * radius > racket3.getStopX() && this.x0 + 2 * radius < racket3.getStartX()) {
                 lastHit = 3;
                 collideBallFromWall(5);
-                this.y0 -= MainActivity.WALL_MINIMUM_THRESHOLD;
+                this.y0 -= SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
                 this.increaseVelocity();
             }
 
