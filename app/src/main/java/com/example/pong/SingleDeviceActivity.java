@@ -1,6 +1,8 @@
 package com.example.pong;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -33,12 +35,18 @@ public class SingleDeviceActivity extends AppCompatActivity {
     static TextView player3Score;
     Handler mHandler;
     int lastScore1 = 0, lastScore2 = 0, lastScore3 = 0;
+    MediaPlayer playBackMediaPlayer;
+    MediaPlayer goalMediaPlayer;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_device);
+        playBackMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.playback);
+        goalMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.goal);
+        playBackMediaPlayer.start();
+        playBackMediaPlayer.setLooping(true);
 
         ImageView ballImage = findViewById(R.id.ball);
 
@@ -118,8 +126,11 @@ public class SingleDeviceActivity extends AppCompatActivity {
                 findViewById(R.id.goal).setVisibility(View.INVISIBLE);
                 ball.setVx0(getRandomV());
                 ball.setVy0(getRandomV());
+                playBackMediaPlayer.seekTo(0);
+                playBackMediaPlayer.start();
+                goalMediaPlayer.pause();
             }
-        },2000);
+        },3000);
     }
 
     public void show() {
@@ -147,10 +158,26 @@ public class SingleDeviceActivity extends AppCompatActivity {
                     ball.setY0(hexaView.getCenterY());
 
                     findViewById(R.id.goal).setVisibility(View.VISIBLE);
+                    playBackMediaPlayer.pause();
+                    goalMediaPlayer.seekTo(0);
+                    goalMediaPlayer.start();
                     stopGoal();
                 }
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (playBackMediaPlayer.isPlaying()) {
+            playBackMediaPlayer.stop();
+            playBackMediaPlayer.release();
+        }
+        if (goalMediaPlayer.isPlaying()) {
+            goalMediaPlayer.stop();
+            goalMediaPlayer.release();
+        }
     }
 
     public void racketButton1Left(View view) {
