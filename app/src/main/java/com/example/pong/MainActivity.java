@@ -40,9 +40,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void multiDevice(View view) {
-        Intent intent = new Intent(this, MultiDeviceMenu.class);
+        Intent intent = new Intent(this, MultiDeviceActivity.class);
         startActivity(intent);
     }
-
-
 }

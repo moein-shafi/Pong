@@ -2,13 +2,12 @@ package com.example.pong;
 
 import android.content.Intent;
 import android.os.Bundle;
-//import android.support.wearable.activity.WearableActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MultiDeviceMenu extends AppCompatActivity {
+public class MultiDeviceActivity extends AppCompatActivity {
 
     private TextView mTextView;
 
