@@ -14,26 +14,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        playBackMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.main);
-        playBackMediaPlayer.start();
-        playBackMediaPlayer.setLooping(true);
+//        playBackMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.main);
+//        playBackMediaPlayer.start();
+//        playBackMediaPlayer.setLooping(true);
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (playBackMediaPlayer.isPlaying()) {
-            playBackMediaPlayer.pause();
-        }
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+////        if (playBackMediaPlayer.isPlaying()) {
+////            playBackMediaPlayer.pause();
+////        }
+//    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        playBackMediaPlayer.seekTo(0);
-        playBackMediaPlayer.start();
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+////        playBackMediaPlayer.seekTo(0);
+////        playBackMediaPlayer.start();
+//    }
 
     public void singleDevice(View view) {
         Intent intent = new Intent(this, SingleDeviceActivity.class);

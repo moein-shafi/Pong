@@ -43,10 +43,10 @@ public class SingleDeviceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_device);
-        playBackMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.playback);
-        goalMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.goal);
-        playBackMediaPlayer.start();
-        playBackMediaPlayer.setLooping(true);
+//        playBackMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.playback);
+//        goalMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.goal);
+//        playBackMediaPlayer.start();
+//        playBackMediaPlayer.setLooping(true);
 
         ImageView ballImage = findViewById(R.id.ball);
 
@@ -126,9 +126,9 @@ public class SingleDeviceActivity extends AppCompatActivity {
                 findViewById(R.id.goal).setVisibility(View.INVISIBLE);
                 ball.setVx0(getRandomV());
                 ball.setVy0(getRandomV());
-                playBackMediaPlayer.seekTo(0);
-                playBackMediaPlayer.start();
-                goalMediaPlayer.pause();
+//                playBackMediaPlayer.seekTo(0);
+//                playBackMediaPlayer.start();
+//                goalMediaPlayer.pause();
             }
         },3000);
     }
@@ -158,27 +158,27 @@ public class SingleDeviceActivity extends AppCompatActivity {
                     ball.setY0(hexaView.getCenterY());
 
                     findViewById(R.id.goal).setVisibility(View.VISIBLE);
-                    playBackMediaPlayer.pause();
-                    goalMediaPlayer.seekTo(0);
-                    goalMediaPlayer.start();
+//                    playBackMediaPlayer.pause();
+//                    goalMediaPlayer.seekTo(0);
+//                    goalMediaPlayer.start();
                     stopGoal();
                 }
             }
         });
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (playBackMediaPlayer.isPlaying()) {
-            playBackMediaPlayer.stop();
-            playBackMediaPlayer.release();
-        }
-        if (goalMediaPlayer.isPlaying()) {
-            goalMediaPlayer.stop();
-            goalMediaPlayer.release();
-        }
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        if (playBackMediaPlayer.isPlaying()) {
+//            playBackMediaPlayer.stop();
+//            playBackMediaPlayer.release();
+//        }
+//        if (goalMediaPlayer.isPlaying()) {
+//            goalMediaPlayer.stop();
+//            goalMediaPlayer.release();
+//        }
+//    }
 
     public void racketButton1Left(View view) {
         HexagonMaskView view2 = findViewById(R.id.hexagonBoard);

@@ -2,22 +2,30 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.pong">
 
+    <!--MULTI-BLUETOOTH LIBRARY-->
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCTION"/>
 
-    <!-- Needed only if your app looks for Bluetooth devices.
-        You must add an attribute to this permission, or declare the
-        ACCESS_FINE_LOCATION permission, depending on the results when you
-        check location usage in your app. -->
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+<!--    -->
+<!--    -->
+<!--    <uses-permission android:name="android.permission.BLUETOOTH"/>-->
+<!--    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>-->
 
-    <!-- Needed only if your app makes the device discoverable to Bluetooth
-         devices. -->
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+<!--    &lt;!&ndash; Needed only if your app looks for Bluetooth devices.-->
+<!--        You must add an attribute to this permission, or declare the-->
+<!--        ACCESS_FINE_LOCATION permission, depending on the results when you-->
+<!--        check location usage in your app. &ndash;&gt;-->
+<!--    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />-->
 
-    <!-- Needed only if your app communicates with already-paired Bluetooth
-         devices. -->
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+<!--    &lt;!&ndash; Needed only if your app makes the device discoverable to Bluetooth-->
+<!--         devices. &ndash;&gt;-->
+<!--    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />-->
+
+<!--    &lt;!&ndash; Needed only if your app communicates with already-paired Bluetooth-->
+<!--         devices. &ndash;&gt;-->
+<!--    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />-->
 
     <application
         android:allowBackup="true"
@@ -43,13 +51,13 @@
             android:theme="@style/Theme.Pong.NoActionBar" />
         <activity
             android:name=".MultiDeviceActivity"
-            android:label="@string/title_activity_multi_device_menu">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:label="@string/title_activity_multi_device_menu"/>
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
         <!--
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.
