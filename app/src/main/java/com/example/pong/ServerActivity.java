@@ -5,10 +5,15 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,39 +23,141 @@ import com.ramimartin.multibluetooth.activity.BluetoothActivity;
 import com.ramimartin.multibluetooth.bluetooth.manager.BluetoothManager;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
 
 public class ServerActivity extends AppCompatActivity {
+    private static final int REQUEST_ENABLE_BT = 0;
+    private static final int REQUEST_DISCOVER_BT = 1;
 
+    BluetoothAdapter mBluetoothAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server);
 
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if (mBluetoothAdapter == null){
+            Toast.makeText(this,"Bluetooth is unavailable",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(this,"Bluetooth is available",Toast.LENGTH_SHORT).show();
+        }
+
+        if (mBluetoothAdapter.isEnabled()){
+            Toast.makeText(this,"Bluetooth is enable",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(this,"Bluetooth is disable",Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
     public void turnOn(View view){
-
+        if (!mBluetoothAdapter.isEnabled()){
+            Toast.makeText(this,"turning on bluetooth...",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(intent,REQUEST_ENABLE_BT);
+        }
+        else{
+            Toast.makeText(this,"Bluetooth is already on",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void turnOff(View view){
-
+        if (mBluetoothAdapter.isEnabled()){
+            mBluetoothAdapter.disable();
+            Toast.makeText(this,"Turning Bluetooth off",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(this,"Bluetooth is already off",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void discover(View view){
+        if (!mBluetoothAdapter.isDiscovering()){
+            Toast.makeText(this,"Making your device Discoverable",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            startActivityForResult(intent,REQUEST_DISCOVER_BT);
+        }
 
     }
 
     public void showPaired(View view){
+//        if (mBluetoothAdapter.isEnabled()){
+//            Set<BluetoothDevice> devices = mBluetoothAdapter.getBondedDevices();
+//            String devices_info = "";
+//            for (BluetoothDevice device: devices){
+//                devices_info += "\nDevice: " + device.getName() + "," + device.getAddress();
+//            }
+//            Toast.makeText(this,devices_info,Toast.LENGTH_SHORT).show();
+//        }
+//        else{
+//            Toast.makeText(this,"Turn on bluetooth to get paired devices",Toast.LENGTH_SHORT).show();
+//        }
+        mBluetoothAdapter.startDiscovery();
+        BroadcastReceiver mReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
 
+                //Finding devices
+                if (BluetoothDevice.ACTION_FOUND.equals(action))
+                {
+                    // Get the BluetoothDevice object from the Intent
+                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    // Add the name and address to an array adapter to show in a ListView
+                    //mArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+                    Toast.makeText(context,device.getName() + "\n" + device.getAddress(),Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(mReceiver, filter);
+
+
+//        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+//        this.registerReceiver(mReceiver, filter);
+//        mBluetoothAdapter.startDiscovery();
     }
 
+//    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+//        public void onReceive(Context context, Intent intent) {
+//            String action = intent.getAction();
+//            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+//                // Discovery has found a device. Get the BluetoothDevice
+//                // object and its info from the Intent.
+//                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+//                String deviceName = device.getName();
+//                String deviceHardwareAddress = device.getAddress(); // MAC address
+//                Toast.makeText(context,"device " + deviceName,Toast.LENGTH_SHORT).show();
+////                Log.i("Device Name: " , "device " + deviceName);
+//                Toast.makeText(context,"hard"  + deviceHardwareAddress,Toast.LENGTH_SHORT).show();
+////                Log.i("deviceHardwareAddress " , "hard"  + deviceHardwareAddress);
+//            }
+//        }
+//    };
 
-//    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode){
+            case REQUEST_ENABLE_BT:
+                if (resultCode == RESULT_OK){
+                    Toast.makeText(this,"Bluetooth is on",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(this,"couldn't on Bluetooth",Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    //    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 //    BluetoothAdapter b_adapter;
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
