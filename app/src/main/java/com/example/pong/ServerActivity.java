@@ -3,11 +3,15 @@ package com.example.pong;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -20,15 +24,19 @@ public class ServerActivity extends AppCompatActivity {
     private static final int REQUEST_DISCOVER_BT = 1;
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
-
+    private static final int REQUEST_ENABLE_DISCOVERABLE = 1;
+    private static final int REQUEST_ENABLE_BLUETOOTH = 2;
     ArrayList<String> clientAddresses = new ArrayList<>();
+    BluetoothService btService;
+    private boolean shouldStop = true;
+
 
     BluetoothAdapter mBluetoothAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server);
-
+        bindService(new Intent(this,BluetoothService.class),connection,BIND_AUTO_CREATE);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (mBluetoothAdapter == null){
@@ -47,6 +55,67 @@ public class ServerActivity extends AppCompatActivity {
 
 
     }
+
+    private final ServiceConnection connection = new ServiceConnection() {
+
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            btService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            btService = ((BluetoothService.BtBinder) service).getService();
+            //GameData.getInstance().setBtService(btService);
+            btService.registerActivity(ServerActivity.class);
+
+            try {
+                btService.initBtAdapter();
+            } catch (BluetoothService.BtUnavailableException e) {
+                Toast.makeText(ServerActivity.this, "bluetooth is absent", Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+
+            if (!btService.getBluetoothAdapter().isEnabled()) {
+                startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_ENABLE_BLUETOOTH);
+            } else {
+                initBt();
+            }
+
+
+            btService.setOnConnected(new BluetoothService.OnConnected() {
+                @Override
+                public void success() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            shouldStop = false;
+                            if (btService.isServer()) {
+//                                GameData.getInstance().setServer(true);
+//                                startActivity(new Intent(DeviceChooserActivity.this,
+//                                        BattleActivity.class));
+                            } else {
+//                                GameData.getInstance().setServer(false);
+//                                startActivity(new Intent(DeviceChooserActivity.this,
+//                                        BattleActivity.class));
+                            }
+                            finish();
+                        }
+                    });
+                }
+            });
+        }
+    };
+    private void initBt() {
+//        Set<BluetoothDevice> paired = btService.getBluetoothAdapter().getBondedDevices();
+//        for (BluetoothDevice device : paired) {
+//            arrayAdapter.add(device.getName() + "\n" + device.getAddress());
+//        }
+        btService.startAcceptThread();
+    }
+
 
     public void turnOn(View view){
         if (!mBluetoothAdapter.isEnabled()){
@@ -101,24 +170,53 @@ public class ServerActivity extends AppCompatActivity {
             case REQUEST_CONNECT_DEVICE_SECURE:
                 // When DeviceListActivity returns with a device to connect
                 if (resultCode == Activity.RESULT_OK) {
-                    connectDevice(data, true);
+//                    connectDevice(data, true);
+                    Bundle extras = data.getExtras();
+                    if (extras == null) {
+                        return;
+                    }
+                    String clientAddress = extras.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+                    System.out.println("client address: "+clientAddress);
+                    btService.startConnectThread(clientAddress);
                 }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void connectDevice(Intent data, boolean secure) {
-        // Get the device MAC address
-        Bundle extras = data.getExtras();
-        if (extras == null) {
-            return;
+    @Override
+    protected void onStop() {
+        if (btService != null) {
+            btService.unregisterActivity();
         }
-        String clientAddress = extras.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-        // Get the BluetoothDevice object
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(clientAddress);
-
-
-        mChatService.connect(device, secure);
+        super.onStop();
     }
+
+    @Override
+    protected void onDestroy() {
+        if (btService.getBluetoothAdapter() != null) {
+            btService.getBluetoothAdapter().cancelDiscovery();
+        }
+//        unregisterReceiver(broadcastReceiver);
+        if (btService != null && shouldStop) {
+//            Log.d("DeviceChooser", "onDestroy: BtService is STOPPING!");
+//            btService.stopSelf();
+//            btService = null;
+        }
+        unbindService(connection);
+        super.onDestroy();
+    }
+//    private void connectDevice(Intent data, boolean secure) {
+//        // Get the device MAC address
+//        Bundle extras = data.getExtras();
+//        if (extras == null) {
+//            return;
+//        }
+//        String clientAddress = extras.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+//        // Get the BluetoothDevice object
+//        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(clientAddress);
+//
+//
+//        mChatService.connect(device, secure);
+//    }
 }
