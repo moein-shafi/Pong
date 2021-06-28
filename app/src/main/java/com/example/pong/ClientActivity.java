@@ -15,8 +15,8 @@ import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.ramimartin.multibluetooth.activity.BluetoothActivity;
-import com.ramimartin.multibluetooth.bluetooth.manager.BluetoothManager;
+//import com.ramimartin.multibluetooth.activity.BluetoothActivity;
+//import com.ramimartin.multibluetooth.bluetooth.manager.BluetoothManager;
 
 import java.io.IOException;
 import java.util.Set;
@@ -24,7 +24,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-public class ClientActivity extends BluetoothActivity {
+public class ClientActivity extends AppCompatActivity {
 //    private static final int REQUEST_ENABLE_BT = 1;
 //    private static String UUID_String = "PONG SERVER";
 //    private static final UUID MY_UUID = UUID.nameUUIDFromBytes(UUID_String.getBytes());
@@ -96,109 +96,109 @@ public class ClientActivity extends BluetoothActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            int permissionCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
-            permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
-            }
-        }
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            int permissionCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
+//            permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
+//            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+//                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+//            }
+//        }
 
-        setMessageMode(BluetoothManager.MessageMode.String);
-        setTimeDiscoverable(BluetoothManager.BLUETOOTH_TIME_DICOVERY_120_SEC);
-        selectClientMode();
+//        setMessageMode(BluetoothManager.MessageMode.String);
+//        setTimeDiscoverable(BluetoothManager.BLUETOOTH_TIME_DICOVERY_120_SEC);
+//        selectClientMode();
 
-        Timer t = new Timer();
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-//                ball.move(deltaT);
-//                show();
-                Toast.makeText(getApplicationContext(),"Hello Client",Toast.LENGTH_LONG).show();
-
-            }
-        }, 0, 30000);
+//        Timer t = new Timer();
+//        t.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+////                ball.move(deltaT);
+////                show();
+//                Toast.makeText(getApplicationContext(),"Hello Client",Toast.LENGTH_LONG).show();
+//
+//            }
+//        }, 0, 30000);
 
 //        createClient(mServerAddressMac);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_COARSE_LOCATION: {
-                // TODO stuff if you need
-            }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+//        switch (requestCode) {
+//            case PERMISSION_REQUEST_COARSE_LOCATION: {
+//                // TODO stuff if you need
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public String setUUIDappIdentifier() {
+//        return "e0912847-d749-81e9-8841";
+//    }
 
-    @Override
-    public String setUUIDappIdentifier() {
-        return "e0912847-d749-81e9-8841";
-    }
+//    @Override
+//    public int myNbrClientMax() {
+//        return 1;
+//    }
 
-    @Override
-    public int myNbrClientMax() {
-        return 1;
-    }
+//    @Override
+//    public void onBluetoothDeviceFound(BluetoothDevice bluetoothDevice) {
+//        if(getTypeBluetooth() == BluetoothManager.TypeBluetooth.Server) {
+//            Toast.makeText(getApplicationContext(),"==> Device detected and Thread Server created" + bluetoothDevice.getAddress(),Toast.LENGTH_LONG).show();
+//            //            setLogText("===> Device detected and Thread Server created for this address : " + device.getAddress());
+//        }else{
+//            Toast.makeText(getApplicationContext(),"Device detected" + bluetoothDevice.getAddress(),Toast.LENGTH_LONG).show();
+////            setLogText("===> Device detected : "+ device.getAddress());
+//        }
+//    }
 
-    @Override
-    public void onBluetoothDeviceFound(BluetoothDevice bluetoothDevice) {
-        if(getTypeBluetooth() == BluetoothManager.TypeBluetooth.Server) {
-            Toast.makeText(getApplicationContext(),"==> Device detected and Thread Server created" + bluetoothDevice.getAddress(),Toast.LENGTH_LONG).show();
-            //            setLogText("===> Device detected and Thread Server created for this address : " + device.getAddress());
-        }else{
-            Toast.makeText(getApplicationContext(),"Device detected" + bluetoothDevice.getAddress(),Toast.LENGTH_LONG).show();
-//            setLogText("===> Device detected : "+ device.getAddress());
-        }
-    }
+//    @Override
+//    public void onClientConnectionSuccess() {
+//
+//        Toast.makeText(getApplicationContext(),"Client Connection Success",Toast.LENGTH_LONG).show();
+//
+//    }
 
-    @Override
-    public void onClientConnectionSuccess() {
-
-        Toast.makeText(getApplicationContext(),"Client Connection Success",Toast.LENGTH_LONG).show();
-
-    }
-
-    @Override
-    public void onClientConnectionFail() {
-        Toast.makeText(getApplicationContext(),"Client Connection Failed",Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onServeurConnectionSuccess() {
-        Toast.makeText(getApplicationContext(),"Server Connection Success",Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onServeurConnectionFail() {
-        Toast.makeText(getApplicationContext(),"Server Connection Failed",Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onBluetoothStartDiscovery() {
-
-    }
-
-    @Override
-    public void onBluetoothMsgStringReceived(String s) {
-
-    }
-
-    @Override
-    public void onBluetoothMsgObjectReceived(Object o) {
-
-    }
-
-    @Override
-    public void onBluetoothMsgBytesReceived(byte[] bytes) {
-
-    }
-
-    @Override
-    public void onBluetoothNotAviable() {
-        Toast.makeText(getApplicationContext(),"Bluetooth not available on this device.",Toast.LENGTH_LONG).show();
-
-    }
+//    @Override
+//    public void onClientConnectionFail() {
+//        Toast.makeText(getApplicationContext(),"Client Connection Failed",Toast.LENGTH_LONG).show();
+//    }
+//
+//    @Override
+//    public void onServeurConnectionSuccess() {
+//        Toast.makeText(getApplicationContext(),"Server Connection Success",Toast.LENGTH_LONG).show();
+//    }
+//
+//    @Override
+//    public void onServeurConnectionFail() {
+//        Toast.makeText(getApplicationContext(),"Server Connection Failed",Toast.LENGTH_LONG).show();
+//    }
+//
+//    @Override
+//    public void onBluetoothStartDiscovery() {
+//
+//    }
+//
+//    @Override
+//    public void onBluetoothMsgStringReceived(String s) {
+//
+//    }
+//
+//    @Override
+//    public void onBluetoothMsgObjectReceived(Object o) {
+//
+//    }
+//
+//    @Override
+//    public void onBluetoothMsgBytesReceived(byte[] bytes) {
+//
+//    }
+//
+//    @Override
+//    public void onBluetoothNotAviable() {
+//        Toast.makeText(getApplicationContext(),"Bluetooth not available on this device.",Toast.LENGTH_LONG).show();
+//
+//    }
 
 
     //

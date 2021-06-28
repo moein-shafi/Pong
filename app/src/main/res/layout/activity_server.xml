@@ -25,18 +25,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:id="@+id/b_discover"
-        android:onClick="discover"
-        android:text="discover"
+        android:id="@+id/b_discoverable"
+        android:onClick="discoverable"
+        android:text="make discoverable"
         app:layout_constraintTop_toBottomOf="@+id/b_turn_off"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/b_paired"
-        android:onClick="showPaired"
-        android:text="show paired"
-        app:layout_constraintTop_toBottomOf="@+id/b_discover"/>
+        android:onClick="connect"
+        android:text="connect"
+        app:layout_constraintTop_toBottomOf="@+id/b_discoverable"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

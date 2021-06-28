@@ -64,5 +64,6 @@
                app to run.
         -->
         <activity android:name=".SingleDeviceActivity" />
+        <activity android:name=".DeviceListActivity" />
     </application>
 </manifest>
