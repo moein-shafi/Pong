@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
@@ -143,7 +144,7 @@ public class ServerActivity extends AppCompatActivity {
 //            Toast.makeText(this,"Bluetooth is already off",Toast.LENGTH_SHORT).show();
 //        }
         String salaam = "salaam doost";
-        btService.getChannel().send(salaam.getBytes());
+        btService.getChannel().send(salaam.getBytes(StandardCharsets.UTF_8));
 //        btService.getChannel().setOnMessageReceivedListener(new BluetoothService.OnMessageReceivedListener() {
 //            @Override
 //            public void process(byte[] buffer) {
@@ -203,7 +204,8 @@ public class ServerActivity extends AppCompatActivity {
                         @Override
                         public void process(byte[] buffer) {
                             if (buffer != null){
-                                Log.d("bluetooth-debug", Arrays.toString(buffer));
+                                String string = new String(buffer, StandardCharsets.UTF_8);
+                                Log.d("bluetooth-debug", string);
                             }else {
                                 Log.d("bluetooth-debug","buffer is empty");
                             }
