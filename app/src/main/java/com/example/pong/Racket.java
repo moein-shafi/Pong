@@ -18,6 +18,16 @@ public class Racket {
         this.paint.setStrokeWidth(width);
     }
 
+//    public Racket(float startX, float stopX, float startY, float stopY, float playerNo){
+//        this.startX = startX;
+//        this.stopX = stopX;
+//
+//        this.startY = startY;
+//        this.stopY = stopY;
+//
+//        if
+//    }
+
     public Paint getPaint() {
         return paint;
     }

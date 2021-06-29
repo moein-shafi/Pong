@@ -15,6 +15,19 @@ public class Ball {
     ArrayList<Pair<Float, Float>> boardLines = new ArrayList<>();
     ArrayList<Pair<Float, Float>> coordinations = new ArrayList<>();
     private Racket racket1;
+
+    public Racket getRacket1() {
+        return racket1;
+    }
+
+    public Racket getRacket2() {
+        return racket2;
+    }
+
+    public Racket getRacket3() {
+        return racket3;
+    }
+
     private Racket racket2;
     private Racket racket3;
     private int lastHit = 1;
@@ -244,15 +257,26 @@ public class Ball {
         if (coordinations.size() < 6) {
             return 0.5f;
         }
-        return x0 / (coordinations.get(4).first - coordinations.get(2).first);
+//        return x0 / (coordinations.get(4).first - coordinations.get(2).first);
+        return pixelToPercentageX(x0);
     }
 
     public float getYPercentage() {
         if (coordinations.size() < 6) {
             return 0.5f;
         }
-        return y0 / (coordinations.get(0).second - coordinations.get(3).second);
+//        return y0 / (coordinations.get(0).second - coordinations.get(3).second);
+        return pixelToPercentageY(y0);
     }
+
+    public float pixelToPercentageX(float pixelInput) {
+        return pixelInput / (coordinations.get(4).second - coordinations.get(2).second);
+    }
+
+    public float pixelToPercentageY(float pixelInput) {
+        return pixelInput / (coordinations.get(0).second - coordinations.get(3).second);
+    }
+
 
     public void setX0ByPercentage(float xPercentage) {
         x0 = xPercentage * (coordinations.get(4).first - coordinations.get(2).first);
@@ -261,5 +285,6 @@ public class Ball {
     public void setY0ByPercentage(float yPercentage) {
         y0 = yPercentage * (coordinations.get(0).second - coordinations.get(3).second);
     }
+
 
 }
