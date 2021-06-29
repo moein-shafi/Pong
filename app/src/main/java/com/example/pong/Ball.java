@@ -239,4 +239,27 @@ public class Ball {
     public float getY0() {
         return y0;
     }
+
+    public float getXPercentage() {
+        if (coordinations.size() < 6) {
+            return 0.5f;
+        }
+        return x0 / (coordinations.get(4).first - coordinations.get(2).first);
+    }
+
+    public float getYPercentage() {
+        if (coordinations.size() < 6) {
+            return 0.5f;
+        }
+        return x0 / (coordinations.get(3).second - coordinations.get(0).second);
+    }
+
+    public void setX0ByPercentage(float xPercentage) {
+        x0 = xPercentage * (coordinations.get(4).first - coordinations.get(2).first);
+    }
+
+    public void setY0ByPercentage(float yPercentage) {
+        y0 = yPercentage * (coordinations.get(3).second - coordinations.get(0).second);
+    }
+
 }

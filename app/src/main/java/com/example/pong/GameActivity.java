@@ -97,8 +97,8 @@ public class GameActivity extends AppCompatActivity {
                     Log.d("bluetooth-debug", data);
                     List <String> parsedData = parseData(data);
                     if (parsedData.size() == 2) {
-                        ball.setX0(Float.parseFloat(parsedData.get(0)));
-                        ball.setY0(Float.parseFloat(parsedData.get(1)));
+                        ball.setX0ByPercentage(Float.parseFloat(parsedData.get(0)));
+                        ball.setY0ByPercentage(Float.parseFloat(parsedData.get(1)));
                     }
                 }else {
                     Log.d("bluetooth-debug","buffer is empty");
@@ -186,8 +186,8 @@ public class GameActivity extends AppCompatActivity {
 
 //        ball.getX0();
 //        ball.getY0();
-        String data = Float.toString(ball.getX0()) + ',' + Float.toString(ball.getY0());
-        Log.d("bluetooth-debug",data);
+        String data = Float.toString(ball.getXPercentage()) + ',' + Float.toString(ball.getYPercentage());
+//        Log.d("bluetooth-debug", data);
 //        data += Integer.toString(lastScore1) + ',' + Integer.toString(lastScore2) + ',' + Integer.toString(lastScore3);
         //TODO: add scores
         //TODO: check if we should also send V
