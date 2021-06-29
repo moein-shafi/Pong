@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
 <!--    -->
-<!--    -->
+<!--&lt;!&ndash;    &ndash;&gt;<service android:name="NetworkQueryService" />-->
 <!--    <uses-permission android:name="android.permission.BLUETOOTH"/>-->
 <!--    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>-->
 
@@ -65,5 +65,6 @@
         -->
         <activity android:name=".SingleDeviceActivity" />
         <activity android:name=".DeviceListActivity" />
+        <service android:name=".BluetoothService" />
     </application>
 </manifest>

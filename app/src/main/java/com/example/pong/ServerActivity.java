@@ -36,7 +36,9 @@ public class ServerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server);
+        Log.d("bluetooth-debug","request for service");
         bindService(new Intent(this,BluetoothService.class),connection,BIND_AUTO_CREATE);
+        Log.d("bluetooth-debug","after request for service");
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (mBluetoothAdapter == null){
@@ -66,6 +68,7 @@ public class ServerActivity extends AppCompatActivity {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d("bluetooth-debug","init service");
             btService = ((BluetoothService.BtBinder) service).getService();
             //GameData.getInstance().setBtService(btService);
             btService.registerActivity(ServerActivity.class);
@@ -113,7 +116,10 @@ public class ServerActivity extends AppCompatActivity {
 //        for (BluetoothDevice device : paired) {
 //            arrayAdapter.add(device.getName() + "\n" + device.getAddress());
 //        }
+
+
         btService.startAcceptThread();
+        Log.d("bluetooth-debug","accept thread started");
     }
 
 
@@ -129,13 +135,15 @@ public class ServerActivity extends AppCompatActivity {
     }
 
     public void turnOff(View view){
-        if (mBluetoothAdapter.isEnabled()){
-            mBluetoothAdapter.disable();
-            Toast.makeText(this,"Turning Bluetooth off",Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Toast.makeText(this,"Bluetooth is already off",Toast.LENGTH_SHORT).show();
-        }
+//        if (mBluetoothAdapter.isEnabled()){
+//            mBluetoothAdapter.disable();
+//            Toast.makeText(this,"Turning Bluetooth off",Toast.LENGTH_SHORT).show();
+//        }
+//        else{
+//            Toast.makeText(this,"Bluetooth is already off",Toast.LENGTH_SHORT).show();
+//        }
+        String salaam = "salaam doost";
+        btService.getChannel().send(salaam.getBytes());
     }
 
     public void discoverable(View view){
@@ -177,6 +185,7 @@ public class ServerActivity extends AppCompatActivity {
                     }
                     String clientAddress = extras.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
                     System.out.println("client address: "+clientAddress);
+                    Log.d("bluetooth-debug","request for connection thread");
                     btService.startConnectThread(clientAddress);
                 }
                 break;

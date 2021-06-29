@@ -850,7 +850,7 @@ public class BluetoothService extends Service {
 
         public void run() {
             byte[] buffer = new byte[1024];
-
+            Log.d("bluetooth-debug","before while in connection thread");
             while (true) {
                 try {
                     int countReadBytes = inputStream.read(buffer);
@@ -864,6 +864,7 @@ public class BluetoothService extends Service {
 
         private void write(byte[] bytes) {
             try {
+                Log.d("bluetooth-debug","bluetooth write");
                 outputStream.write(bytes);
             } catch (IOException ignored) {
             }
