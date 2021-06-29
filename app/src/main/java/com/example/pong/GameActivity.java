@@ -96,28 +96,41 @@ public class GameActivity extends AppCompatActivity {
                     String data = new String(buffer, StandardCharsets.UTF_8);
                     Log.d("bluetooth-debug", data);
                     List <String> parsedData = parseData(data);
-                    if (parsedData.size() == 17) {
+                    if (parsedData.size() == 8) {
                         ball.setX0ByPercentage(Float.parseFloat(parsedData.get(0)));
                         ball.setY0ByPercentage(Float.parseFloat(parsedData.get(1)));
 
-                        ball.getRacket1().setStartX(Float.parseFloat(parsedData.get(2)));
-                        ball.getRacket1().setStopX(Float.parseFloat(parsedData.get(3)));
-                        ball.getRacket1().setStartX(Float.parseFloat(parsedData.get(4)));
-                        ball.getRacket1().setStartX(Float.parseFloat(parsedData.get(5)));
+                        ball.getRacket1().setY(Float.parseFloat(parsedData.get(2))); //TODO: percent -> pixel
+//                        ball.getRacket1().setX(Float.parseFloat(parsedData.get(2)));
 
-                        ball.getRacket2().setStartX(Float.parseFloat(parsedData.get(6)));
-                        ball.getRacket2().setStopX(Float.parseFloat(parsedData.get(7)));
-                        ball.getRacket2().setStartX(Float.parseFloat(parsedData.get(8)));
-                        ball.getRacket2().setStartX(Float.parseFloat(parsedData.get(9)));
+                        ball.getRacket2().setY(Float.parseFloat(parsedData.get(3))); //TODO: percent -> pixel
+                        ball.getRacket2().setX((Float.parseFloat(parsedData.get(3)) - ball.getBoardLines().get(3).second)/ball.getBoardLines().get(3).first); // x = (y-b)/a
 
-                        ball.getRacket3().setStartX(Float.parseFloat(parsedData.get(10)));
-                        ball.getRacket3().setStopX(Float.parseFloat(parsedData.get(11)));
-                        ball.getRacket3().setStartX(Float.parseFloat(parsedData.get(12)));
-                        ball.getRacket3().setStartX(Float.parseFloat(parsedData.get(13)));
+                        ball.getRacket3().setY(Float.parseFloat(parsedData.get(4)));
+                        ball.getRacket3().setX((Float.parseFloat(parsedData.get(4)) - ball.getBoardLines().get(5).second)/ball.getBoardLines().get(5).first); // x = (y-b)/a
 
-                        player1.setScore(Integer.parseInt(parsedData.get(14)));
-                        player2.setScore(Integer.parseInt(parsedData.get(15)));
-                        player3.setScore(Integer.parseInt(parsedData.get(16)));
+                        player1.setScore(Integer.parseInt(parsedData.get(5)));
+                        player2.setScore(Integer.parseInt(parsedData.get(6)));
+                        player3.setScore(Integer.parseInt(parsedData.get(7)));
+
+//                        ball.getRacket1().setStartX(Float.parseFloat(parsedData.get(2)));
+//                        ball.getRacket1().setStopX(Float.parseFloat(parsedData.get(3)));
+//                        ball.getRacket1().setStartY(Float.parseFloat(parsedData.get(4)));
+//                        ball.getRacket1().setStopY(Float.parseFloat(parsedData.get(5)));
+//
+//                        ball.getRacket2().setStartX(Float.parseFloat(parsedData.get(6)));
+//                        ball.getRacket2().setStopX(Float.parseFloat(parsedData.get(7)));
+//                        ball.getRacket2().setStartY(Float.parseFloat(parsedData.get(8)));
+//                        ball.getRacket2().setStopY(Float.parseFloat(parsedData.get(9)));
+//
+//                        ball.getRacket3().setStartX(Float.parseFloat(parsedData.get(10)));
+//                        ball.getRacket3().setStopX(Float.parseFloat(parsedData.get(11)));
+//                        ball.getRacket3().setStartY(Float.parseFloat(parsedData.get(12)));
+//                        ball.getRacket3().setStopY(Float.parseFloat(parsedData.get(13)));
+
+//                        player1.setScore(Integer.parseInt(parsedData.get(14)));
+//                        player2.setScore(Integer.parseInt(parsedData.get(15)));
+//                        player3.setScore(Integer.parseInt(parsedData.get(16)));
 
                     }
                 }else {
@@ -209,27 +222,24 @@ public class GameActivity extends AppCompatActivity {
 //        String data = Float.toString(ball.getXPercentage()) + ',' + Float.toString(ball.getYPercentage());
 
 //        Log.d("bluetooth-debug", data);
-        String data = "" + ball.getX0() + ',' + ball.getY0() + ',' +
+        String data = "" + ball.pixelToPercentageX(ball.getX0()) + ',' + ball.pixelToPercentageY(ball.getY0()) + ',' +
 
-                      ball.pixelToPercentageX(ball.getRacket1().getStartX()) + ',' +
-                      ball.pixelToPercentageX(ball.getRacket1().getStopX()) + ',' +
-
-                      ball.pixelToPercentageY(ball.getRacket1().getStartY()) + ',' +
-                      ball.pixelToPercentageY(ball.getRacket1().getStopY()) + ',' +
-
-
-                      ball.pixelToPercentageX(ball.getRacket2().getStartX()) + ',' +
-                      ball.pixelToPercentageX(ball.getRacket2().getStopX()) + ',' +
-
-                      ball.pixelToPercentageY(ball.getRacket2().getStartY()) + ',' +
-                      ball.pixelToPercentageY(ball.getRacket2().getStopY()) + ',' +
+                      ball.pixelToPercentageRacket(1) + ',' +
+//                      ball.pixelToPercentageRacket(ball.getRacket1().getStopX(),1) + ',' +
+//                      ball.pixelToPercentageRacket(ball.getRacket1().getStartY(),1) + ',' +
+//                      ball.pixelToPercentageRacket(ball.getRacket1().getStopY(),1) + ',' +
 
 
-                      ball.pixelToPercentageX(ball.getRacket3().getStartX()) + ',' +
-                      ball.pixelToPercentageX(ball.getRacket3().getStopX()) + ',' +
+                      ball.pixelToPercentageRacket(2) + ',' +
+//                      ball.pixelToPercentageRacket(ball.getRacket2().getStopX(),2) + ',' +
+//                      ball.pixelToPercentageRacket(ball.getRacket2().getStartY(),2) + ',' +
+//                      ball.pixelToPercentageRacket(ball.getRacket2().getStopY(),2) + ',' +
 
-                      ball.pixelToPercentageY(ball.getRacket3().getStartY()) + ',' +
-                      ball.pixelToPercentageY(ball.getRacket3().getStopY()) + ',' +
+
+                      ball.pixelToPercentageRacket(3) + ',' +
+//                      ball.pixelToPercentageRacket(ball.getRacket3().getStopX(),3) + ',' +
+//                      ball.pixelToPercentageRacket(ball.getRacket3().getStartY(),3) + ',' +
+//                      ball.pixelToPercentageRacket(ball.getRacket3().getStopY(),3) + ',' +
 
                       player1.getScore() + ',' + player2.getScore() + ',' + player3.getScore();
 

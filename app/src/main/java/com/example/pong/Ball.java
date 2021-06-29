@@ -12,6 +12,7 @@ public class Ball {
 
     int radius;
     ImageView imageView;
+    
     ArrayList<Pair<Float, Float>> boardLines = new ArrayList<>();
     ArrayList<Pair<Float, Float>> coordinations = new ArrayList<>();
     private Racket racket1;
@@ -26,6 +27,10 @@ public class Ball {
 
     public Racket getRacket3() {
         return racket3;
+    }
+
+    public ArrayList<Pair<Float, Float>> getBoardLines() {
+        return boardLines;
     }
 
     private Racket racket2;
@@ -258,7 +263,9 @@ public class Ball {
             return 0.5f;
         }
 //        return x0 / (coordinations.get(4).first - coordinations.get(2).first);
+//        return pixelToPercentageX(x0);
         return pixelToPercentageX(x0);
+
     }
 
     public float getYPercentage() {
@@ -269,9 +276,20 @@ public class Ball {
         return pixelToPercentageY(y0);
     }
 
+    
+    public float pixelToPercentageRacket(int racketNo) {
+        if (racketNo == 1)
+            return (racket1.getY() - coordinations.get(2).second) / (coordinations.get(1).second - coordinations.get(2).second);
+        if(racketNo == 2)
+            return (racket2.getY() - coordinations.get(3).second) / (coordinations.get(4).second - coordinations.get(3).second);
+        else
+            return (racket3.getY() - coordinations.get(5).second) / (coordinations.get(0).second - coordinations.get(5).second);
+    }
+
     public float pixelToPercentageX(float pixelInput) {
         return pixelInput / (coordinations.get(4).second - coordinations.get(2).second);
     }
+
 
     public float pixelToPercentageY(float pixelInput) {
         return pixelInput / (coordinations.get(0).second - coordinations.get(3).second);
