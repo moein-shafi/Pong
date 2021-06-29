@@ -73,6 +73,7 @@ public class ServerActivity extends AppCompatActivity {
             btService = ((BluetoothService.BtBinder) service).getService();
             //GameData.getInstance().setBtService(btService);
             GameActivity.setBluetoothService(btService);
+
             btService.registerActivity(ServerActivity.class);
 
             try {
@@ -110,7 +111,7 @@ public class ServerActivity extends AppCompatActivity {
 ////                                startActivity(new Intent(DeviceChooserActivity.this,
 ////                                        BattleActivity.class));
 //                            }
-                            finish();
+                           // finish();
                         }
                     });
                 }
@@ -234,16 +235,16 @@ public class ServerActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (btService.getBluetoothAdapter() != null) {
-            btService.getBluetoothAdapter().cancelDiscovery();
-        }
-//        unregisterReceiver(broadcastReceiver);
-        if (btService != null && shouldStop) {
-//            Log.d("DeviceChooser", "onDestroy: BtService is STOPPING!");
-//            btService.stopSelf();
-//            btService = null;
-        }
-        unbindService(connection);
+//        if (btService.getBluetoothAdapter() != null) {
+//            btService.getBluetoothAdapter().cancelDiscovery();
+//        }
+////        unregisterReceiver(broadcastReceiver);
+//        if (btService != null && shouldStop) {
+////            Log.d("DeviceChooser", "onDestroy: BtService is STOPPING!");
+////            btService.stopSelf();
+////            btService = null;
+//        }
+//        unbindService(connection);
         super.onDestroy();
     }
 //    private void connectDevice(Intent data, boolean secure) {

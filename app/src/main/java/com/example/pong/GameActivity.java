@@ -114,6 +114,12 @@ public class GameActivity extends AppCompatActivity {
 
     public void startGame(View view) {
         Log.d("bluetooth-debug","before send");
+        if (bluetoothService.getChannel() == null){
+            Log.d("bluetooth-debug","service nulllll");
+        }else {
+            Log.d("bluetooth-debug","service ok");
+        }
+
         String salaam = "salaam doost";
         bluetoothService.getChannel().send(salaam.getBytes(StandardCharsets.UTF_8));
         Log.d("bluetooth-debug","after send");

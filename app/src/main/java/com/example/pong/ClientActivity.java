@@ -1,272 +1,263 @@
 package com.example.pong;
 
-import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
+import android.content.ComponentName;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.os.Build;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import android.bluetooth.BluetoothSocket;
+
+import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
-//import com.ramimartin.multibluetooth.activity.BluetoothActivity;
-//import com.ramimartin.multibluetooth.bluetooth.manager.BluetoothManager;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
-import java.io.IOException;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
 
 public class ClientActivity extends AppCompatActivity {
-//    private static final int REQUEST_ENABLE_BT = 1;
-//    private static String UUID_String = "PONG SERVER";
-//    private static final UUID MY_UUID = UUID.nameUUIDFromBytes(UUID_String.getBytes());
-//    private static final String TAG = "pongClient";
-//
-//    private class ConnectThread extends Thread {
-//        private BluetoothAdapter bluetoothAdapter;
-//        private final BluetoothSocket mmSocket;
-//        private final BluetoothDevice mmDevice;
-//
-//        public ConnectThread(BluetoothDevice device) {
-//            // Use a temporary object that is later assigned to mmSocket
-//            // because mmSocket is final.
-//            BluetoothSocket tmp = null;
-//            mmDevice = device;
-//
-//            try {
-//                // Get a BluetoothSocket to connect with the given BluetoothDevice.
-//                // MY_UUID is the app's UUID string, also used in the server code.
-//                tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
-//            } catch (IOException e) {
-//                Log.e(TAG, "Socket's create() method failed", e);
-//            }
-//            mmSocket = tmp;
-//        }
-//
-//        public void run() {
-//            // Cancel discovery because it otherwise slows down the connection.
-//            bluetoothAdapter.cancelDiscovery();
-//
-//            try {
-//                // Connect to the remote device through the socket. This call blocks
-//                // until it succeeds or throws an exception.
-//                mmSocket.connect();
-//            } catch (IOException connectException) {
-//                // Unable to connect; close the socket and return.
-//                try {
-//                    mmSocket.close();
-//                } catch (IOException closeException) {
-//                    Log.e(TAG, "Could not close the client socket", closeException);
-//                }
-//                return;
-//            }
-//
-//            // The connection attempt succeeded. Perform work associated with
-//            // the connection in a separate thread.
-//            Toast.makeText(getApplicationContext(), "Connected to server", Toast.LENGTH_LONG).show();
-//        }
-//
-//        // Closes the client socket and causes the thread to finish.
-//        public void cancel() {
-//            try {
-//                mmSocket.close();
-//            } catch (IOException e) {
-//                Log.e(TAG, "Could not close the client socket", e);
-//            }
-//        }
-//    }
-//
-//    private static final int DISCOVER_DURATION = 300;
-//    private static final int REQUEST_BLU = 1;
-//
-//
+    private static final int REQUEST_ENABLE_BT = 0;
+    private static final int REQUEST_DISCOVER_BT = 1;
+    private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
+    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
+    private static final int REQUEST_ENABLE_DISCOVERABLE = 1;
+    private static final int REQUEST_ENABLE_BLUETOOTH = 2;
+    ArrayList<String> clientAddresses = new ArrayList<>();
+    BluetoothService btService;
+    private boolean shouldStop = true;
 
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
+    BluetoothAdapter mBluetoothAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_client);
+        setContentView(R.layout.activity_server);
+        Log.d("bluetooth-debug","request for service");
+        bindService(new Intent(this,BluetoothService.class),connection,BIND_AUTO_CREATE);
+        Log.d("bluetooth-debug","after request for service");
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            int permissionCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
-//            permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
-//            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-//                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
-//            }
-//        }
+        if (mBluetoothAdapter == null){
+            Toast.makeText(this,"Bluetooth is unavailable",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(this,"Bluetooth is available",Toast.LENGTH_SHORT).show();
+        }
 
-//        setMessageMode(BluetoothManager.MessageMode.String);
-//        setTimeDiscoverable(BluetoothManager.BLUETOOTH_TIME_DICOVERY_120_SEC);
-//        selectClientMode();
+        if (mBluetoothAdapter.isEnabled()){
+            Toast.makeText(this,"Bluetooth is enable",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(this,"Bluetooth is disable",Toast.LENGTH_SHORT).show();
+        }
 
-//        Timer t = new Timer();
-//        t.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-////                ball.move(deltaT);
-////                show();
-//                Toast.makeText(getApplicationContext(),"Hello Client",Toast.LENGTH_LONG).show();
-//
-//            }
-//        }, 0, 30000);
 
-//        createClient(mServerAddressMac);
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-//        switch (requestCode) {
-//            case PERMISSION_REQUEST_COARSE_LOCATION: {
-//                // TODO stuff if you need
+    private final ServiceConnection connection = new ServiceConnection() {
+
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            btService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d("bluetooth-debug","init service");
+            btService = ((BluetoothService.BtBinder) service).getService();
+            //GameData.getInstance().setBtService(btService);
+            GameActivity.setBluetoothService(btService);
+
+            btService.registerActivity(ClientActivity.class);
+
+            try {
+                btService.initBtAdapter();
+            } catch (BluetoothService.BtUnavailableException e) {
+                Toast.makeText(ClientActivity.this, "bluetooth is absent", Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+
+            if (!btService.getBluetoothAdapter().isEnabled()) {
+                startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_ENABLE_BLUETOOTH);
+            } else {
+                initBt();
+            }
+
+
+            btService.setOnConnected(new BluetoothService.OnConnected() {
+                @Override
+                public void success() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            shouldStop = false;
+                            GameActivity.setIsServer(false);
+                            startActivity(new Intent(ClientActivity.this,
+                                    GameActivity.class));
+
+//                            if (btService.isServer()) {
+////                                GameData.getInstance().setServer(true);
+////                                startActivity(new Intent(DeviceChooserActivity.this,
+////                                        BattleActivity.class));
+//                            } else {
+////                                GameData.getInstance().setServer(false);
+////                                startActivity(new Intent(DeviceChooserActivity.this,
+////                                        BattleActivity.class));
+//                            }
+                            // finish();
+                        }
+                    });
+                }
+            });
+        }
+    };
+    private void initBt() {
+//        Set<BluetoothDevice> paired = btService.getBluetoothAdapter().getBondedDevices();
+//        for (BluetoothDevice device : paired) {
+//            arrayAdapter.add(device.getName() + "\n" + device.getAddress());
+//        }
+
+
+        btService.startAcceptThread();
+        Log.d("bluetooth-debug","accept thread started");
+    }
+
+
+    public void turnOn(View view){
+        if (!mBluetoothAdapter.isEnabled()){
+            Toast.makeText(this,"turning on bluetooth...",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(intent,REQUEST_ENABLE_BT);
+        }
+        else{
+            Toast.makeText(this,"Bluetooth is already on",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void turnOff(View view){
+//        if (mBluetoothAdapter.isEnabled()){
+//            mBluetoothAdapter.disable();
+//            Toast.makeText(this,"Turning Bluetooth off",Toast.LENGTH_SHORT).show();
+//        }
+//        else{
+//            Toast.makeText(this,"Bluetooth is already off",Toast.LENGTH_SHORT).show();
+//        }
+        String salaam = "salaam doost";
+        btService.getChannel().send(salaam.getBytes(StandardCharsets.UTF_8));
+//        btService.getChannel().setOnMessageReceivedListener(new BluetoothService.OnMessageReceivedListener() {
+//            @Override
+//            public void process(byte[] buffer) {
+//
 //            }
+//        });
+    }
+
+
+
+
+
+    public void receive(View view){
+
+    }
+
+    public void discoverable(View view){
+        if (!mBluetoothAdapter.isDiscovering()){
+            Toast.makeText(this,"Making your device Discoverable",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            startActivityForResult(intent,REQUEST_DISCOVER_BT);
+        }
+
+    }
+
+    public void connect(View view) {
+        if (mBluetoothAdapter.isEnabled()) {
+            Intent serverIntent = new Intent(this, DeviceListActivity.class);
+            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
+        } else {
+            Toast.makeText(this, "Turn on bluetooth to get paired devices", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode){
+            case REQUEST_ENABLE_BT:
+                if (resultCode == RESULT_OK){
+                    Toast.makeText(this,"Bluetooth is on",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(this,"couldn't on Bluetooth",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case REQUEST_CONNECT_DEVICE_SECURE:
+                // When DeviceListActivity returns with a device to connect
+                if (resultCode == Activity.RESULT_OK) {
+//                    connectDevice(data, true);
+                    Bundle extras = data.getExtras();
+                    if (extras == null) {
+                        return;
+                    }
+                    String clientAddress = extras.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+                    System.out.println("client address: "+clientAddress);
+                    Log.d("bluetooth-debug","request for connection thread");
+                    btService.startConnectThread(clientAddress);
+//                    btService.getChannel().setOnMessageReceivedListener(new BluetoothService.OnMessageReceivedListener() {
+//                        @Override
+//                        public void process(byte[] buffer) {
+//                            if (buffer != null){
+//                                String string = new String(buffer, StandardCharsets.UTF_8);
+//                                Log.d("bluetooth-debug", string);
+//                            }else {
+//                                Log.d("bluetooth-debug","buffer is empty");
+//                            }
+//                        }
+//                    });
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onStop() {
+        if (btService != null) {
+            btService.unregisterActivity();
+        }
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+//        if (btService.getBluetoothAdapter() != null) {
+//            btService.getBluetoothAdapter().cancelDiscovery();
 //        }
-//    }
-//
-//    @Override
-//    public String setUUIDappIdentifier() {
-//        return "e0912847-d749-81e9-8841";
-//    }
-
-//    @Override
-//    public int myNbrClientMax() {
-//        return 1;
-//    }
-
-//    @Override
-//    public void onBluetoothDeviceFound(BluetoothDevice bluetoothDevice) {
-//        if(getTypeBluetooth() == BluetoothManager.TypeBluetooth.Server) {
-//            Toast.makeText(getApplicationContext(),"==> Device detected and Thread Server created" + bluetoothDevice.getAddress(),Toast.LENGTH_LONG).show();
-//            //            setLogText("===> Device detected and Thread Server created for this address : " + device.getAddress());
-//        }else{
-//            Toast.makeText(getApplicationContext(),"Device detected" + bluetoothDevice.getAddress(),Toast.LENGTH_LONG).show();
-////            setLogText("===> Device detected : "+ device.getAddress());
+////        unregisterReceiver(broadcastReceiver);
+//        if (btService != null && shouldStop) {
+////            Log.d("DeviceChooser", "onDestroy: BtService is STOPPING!");
+////            btService.stopSelf();
+////            btService = null;
 //        }
-//    }
-
-//    @Override
-//    public void onClientConnectionSuccess() {
-//
-//        Toast.makeText(getApplicationContext(),"Client Connection Success",Toast.LENGTH_LONG).show();
-//
-//    }
-
-//    @Override
-//    public void onClientConnectionFail() {
-//        Toast.makeText(getApplicationContext(),"Client Connection Failed",Toast.LENGTH_LONG).show();
-//    }
-//
-//    @Override
-//    public void onServeurConnectionSuccess() {
-//        Toast.makeText(getApplicationContext(),"Server Connection Success",Toast.LENGTH_LONG).show();
-//    }
-//
-//    @Override
-//    public void onServeurConnectionFail() {
-//        Toast.makeText(getApplicationContext(),"Server Connection Failed",Toast.LENGTH_LONG).show();
-//    }
-//
-//    @Override
-//    public void onBluetoothStartDiscovery() {
-//
-//    }
-//
-//    @Override
-//    public void onBluetoothMsgStringReceived(String s) {
-//
-//    }
-//
-//    @Override
-//    public void onBluetoothMsgObjectReceived(Object o) {
-//
-//    }
-//
-//    @Override
-//    public void onBluetoothMsgBytesReceived(byte[] bytes) {
-//
-//    }
-//
-//    @Override
-//    public void onBluetoothNotAviable() {
-//        Toast.makeText(getApplicationContext(),"Bluetooth not available on this device.",Toast.LENGTH_LONG).show();
-//
-//    }
-
-
-    //
-//        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//
-//        enableBluetooth();
-//
-//        if (bluetoothAdapter == null) {
-//            Log.e(TAG, "Device doesn't support bluetooth");
+//        unbindService(connection);
+        super.onDestroy();
+    }
+//    private void connectDevice(Intent data, boolean secure) {
+//        // Get the device MAC address
+//        Bundle extras = data.getExtras();
+//        if (extras == null) {
+//            return;
 //        }
-//
-//        if (!bluetoothAdapter.isEnabled()) {
-//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-//        }
+//        String clientAddress = extras.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+//        // Get the BluetoothDevice object
+//        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(clientAddress);
 //
 //
-//        // Register for broadcasts when a device is discovered.
-//        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-////        registerReceiver(receiver, filter);
-//
-//        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-//
-//        // Register for broadcasts when discovery has finished
-//        filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-//        registerReceiver(discoveryFinishReceiver, filter);
-//
-////        if (pairedDevices.size() > 0) {
-////            // There are paired devices. Get the name and address of each paired device.
-////            for (BluetoothDevice device : pairedDevices) {
-////                String deviceName = device.getName();
-////                String deviceHardwareAddress = device.getAddress(); // MAC address
-////            }
-////        }
-//
-//        new ConnectThread(pairedDevices.iterator().next()).run();//start? //TODO CHECK ITERATOR.NEXT
-//    }
-//
-//    private final BroadcastReceiver discoveryFinishReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String action = intent.getAction();
-//
-//            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-//                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-//                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-////                    discoveredDevicesAdapter.add(device.getName() + "\n" + device.getAddress());
-//                }
-//            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-////                if (discoveredDevicesAdapter.getCount() == 0) {
-////                    discoveredDevicesAdapter.add(getString(R.string.none_found));
-////                }
-//            }
-//        }
-//    };
-//
-//    public void enableBluetooth(){
-//        Intent discoveryIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-//
-//        Intent intent = discoveryIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVER_DURATION);
-//
-//        startActivityForResult(discoveryIntent, REQUEST_BLU);
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        // Don't forget to unregister the ACTION_FOUND receiver.
-////        unregisterReceiver(receiver);
+//        mChatService.connect(device, secure);
 //    }
 }
