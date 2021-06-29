@@ -104,7 +104,7 @@ public class ServerActivity extends AppCompatActivity {
 //                                startActivity(new Intent(DeviceChooserActivity.this,
 //                                        BattleActivity.class));
                             }
-                            finish();
+                          //  finish();
                         }
                     });
                 }
@@ -144,6 +144,18 @@ public class ServerActivity extends AppCompatActivity {
 //        }
         String salaam = "salaam doost";
         btService.getChannel().send(salaam.getBytes());
+//        btService.getChannel().setOnMessageReceivedListener(new BluetoothService.OnMessageReceivedListener() {
+//            @Override
+//            public void process(byte[] buffer) {
+//
+//            }
+//        });
+    }
+
+
+
+    public void receive(View view){
+
     }
 
     public void discoverable(View view){
@@ -187,6 +199,16 @@ public class ServerActivity extends AppCompatActivity {
                     System.out.println("client address: "+clientAddress);
                     Log.d("bluetooth-debug","request for connection thread");
                     btService.startConnectThread(clientAddress);
+                    btService.getChannel().setOnMessageReceivedListener(new BluetoothService.OnMessageReceivedListener() {
+                        @Override
+                        public void process(byte[] buffer) {
+                            if (buffer != null){
+                                Log.d("bluetooth-debug", Arrays.toString(buffer));
+                            }else {
+                                Log.d("bluetooth-debug","buffer is empty");
+                            }
+                        }
+                    });
                 }
                 break;
         }
