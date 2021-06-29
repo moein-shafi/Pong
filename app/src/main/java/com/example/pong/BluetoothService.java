@@ -364,7 +364,7 @@ public class BluetoothService extends Service {
 
         private void write(byte[] bytes) {
             try {
-                Log.d("bluetooth-debug","bluetooth write");
+//                Log.d("bluetooth-debug","bluetooth write");
                 outputStream.write(bytes);
             } catch (IOException ignored) {
             }

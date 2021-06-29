@@ -187,7 +187,7 @@ public class GameActivity extends AppCompatActivity {
 //        ball.getX0();
 //        ball.getY0();
         String data = Float.toString(ball.getXPercentage()) + ',' + Float.toString(ball.getYPercentage());
-//        Log.d("bluetooth-debug", data);
+        Log.d("bluetooth-debug", data);
 //        data += Integer.toString(lastScore1) + ',' + Integer.toString(lastScore2) + ',' + Integer.toString(lastScore3);
         //TODO: add scores
         //TODO: check if we should also send V

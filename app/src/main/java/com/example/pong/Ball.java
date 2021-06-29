@@ -251,7 +251,7 @@ public class Ball {
         if (coordinations.size() < 6) {
             return 0.5f;
         }
-        return x0 / (coordinations.get(3).second - coordinations.get(0).second);
+        return y0 / (coordinations.get(0).second - coordinations.get(3).second);
     }
 
     public void setX0ByPercentage(float xPercentage) {
@@ -259,7 +259,7 @@ public class Ball {
     }
 
     public void setY0ByPercentage(float yPercentage) {
-        y0 = yPercentage * (coordinations.get(3).second - coordinations.get(0).second);
+        y0 = yPercentage * (coordinations.get(0).second - coordinations.get(3).second);
     }
 
 }
