@@ -30,6 +30,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
@@ -187,6 +188,10 @@ public class BluetoothService extends Service {
 
         public void setOnMessageReceivedListener(OnMessageReceivedListener onMessageReceivedListener) {
             this.onMessageReceivedListener = onMessageReceivedListener;
+        }
+
+        public void sendString(String s) {
+            this.send(s.getBytes(StandardCharsets.UTF_8));
         }
 
         public void send(byte[] bytes) {

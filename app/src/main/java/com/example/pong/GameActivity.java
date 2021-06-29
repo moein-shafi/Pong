@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -91,13 +93,25 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void process(byte[] buffer) {
                 if (buffer != null){
-                    String string = new String(buffer, StandardCharsets.UTF_8);
-                    Log.d("bluetooth-debug", string);
+                    String data = new String(buffer, StandardCharsets.UTF_8);
+                    Log.d("bluetooth-debug", data);
+                    List <String> parsedData = parseData(data);
+                    if (parsedData.size() == 2) {
+                        ball.setX0(Float.parseFloat(parsedData.get(0)));
+                        ball.setY0(Float.parseFloat(parsedData.get(1)));
+                    }
                 }else {
                     Log.d("bluetooth-debug","buffer is empty");
                 }
             }
         });
+    }
+
+    private List<String> parseData(String data) {
+        List<String> parsedData;
+        parsedData = Arrays.asList(data.split(","));
+        System.out.println(parsedData.toString());
+        return parsedData;
     }
 
     private int getRandomV() {
@@ -114,15 +128,19 @@ public class GameActivity extends AppCompatActivity {
 
     public void startGame(View view) {
         Log.d("bluetooth-debug","before send");
-        if (bluetoothService.getChannel() == null){
-            Log.d("bluetooth-debug","service nulllll");
-        }else {
-            Log.d("bluetooth-debug","service ok");
-        }
+//        if (bluetoothService.getChannel() == null){
+//            Log.d("bluetooth-debug","service nulllll");
+//        }else {
+//            Log.d("bluetooth-debug","service ok");
+//        }
 
-        String salaam = "salaam doost";
-        bluetoothService.getChannel().send(salaam.getBytes(StandardCharsets.UTF_8));
-        Log.d("bluetooth-debug","after send");
+//        if (!isServer) {
+//            return;
+//        }
+
+//        String salaam = "salaam doost";
+//        bluetoothService.getChannel().send(salaam.getBytes(StandardCharsets.UTF_8));
+//        Log.d("bluetooth-debug","after send");
 
         HexagonMaskView hexaView = findViewById(R.id.hexagonBoard);
         this.board = new Board(hexaView.getCoordinations());
@@ -154,10 +172,26 @@ public class GameActivity extends AppCompatActivity {
         t.schedule(new TimerTask() {
             @Override
             public void run() {
-                ball.move(deltaT);
-                show();
+                if(isServer) {
+                    ball.move(deltaT);
+                    sendCoordsToClient();
+                }
+                ball.showBall();
+                showScores();
             }
-        }, 0, 20);
+        }, 0, 17);
+    }
+
+    private void sendCoordsToClient() {
+
+//        ball.getX0();
+//        ball.getY0();
+        String data = Float.toString(ball.getX0()) + ',' + Float.toString(ball.getY0());
+        Log.d("bluetooth-debug",data);
+//        data += Integer.toString(lastScore1) + ',' + Integer.toString(lastScore2) + ',' + Integer.toString(lastScore3);
+        //TODO: add scores
+        //TODO: check if we should also send V
+        bluetoothService.getChannel().sendString(data);
     }
 
     public void stopGoal() {
@@ -175,7 +209,7 @@ public class GameActivity extends AppCompatActivity {
         },3000);
     }
 
-    public void show() {
+    public void showScores() {
         mHandler.post(new Runnable() {
             public void run() {
                 if (lastScore1 != player1.getScore() || lastScore2 != player2.getScore() ||

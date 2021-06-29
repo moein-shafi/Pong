@@ -44,6 +44,10 @@ public class Ball {
         this.checkCollision();
         this.x0 += this.vx0 * deltaT;
         this.y0 += this.vy0 * deltaT;
+//        this.updateImageLocation();
+    }
+
+    public void showBall(){
         this.updateImageLocation();
     }
 
@@ -226,5 +230,13 @@ public class Ball {
 
     public void setVy0(float vy0) {
         this.vy0 = vy0;
+    }
+
+    public float getX0() {
+        return x0;
+    }
+
+    public float getY0() {
+        return y0;
     }
 }
