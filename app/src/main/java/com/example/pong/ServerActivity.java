@@ -72,6 +72,7 @@ public class ServerActivity extends AppCompatActivity {
             Log.d("bluetooth-debug","init service");
             btService = ((BluetoothService.BtBinder) service).getService();
             //GameData.getInstance().setBtService(btService);
+            GameActivity.setBluetoothService(btService);
             btService.registerActivity(ServerActivity.class);
 
             try {
@@ -96,16 +97,20 @@ public class ServerActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             shouldStop = false;
-                            if (btService.isServer()) {
-//                                GameData.getInstance().setServer(true);
-//                                startActivity(new Intent(DeviceChooserActivity.this,
-//                                        BattleActivity.class));
-                            } else {
-//                                GameData.getInstance().setServer(false);
-//                                startActivity(new Intent(DeviceChooserActivity.this,
-//                                        BattleActivity.class));
-                            }
-                          //  finish();
+                            GameActivity.setIsServer(true);
+                            startActivity(new Intent(ServerActivity.this,
+                                        GameActivity.class));
+
+//                            if (btService.isServer()) {
+////                                GameData.getInstance().setServer(true);
+////                                startActivity(new Intent(DeviceChooserActivity.this,
+////                                        BattleActivity.class));
+//                            } else {
+////                                GameData.getInstance().setServer(false);
+////                                startActivity(new Intent(DeviceChooserActivity.this,
+////                                        BattleActivity.class));
+//                            }
+                            finish();
                         }
                     });
                 }
@@ -155,6 +160,8 @@ public class ServerActivity extends AppCompatActivity {
 
 
 
+
+
     public void receive(View view){
 
     }
@@ -200,17 +207,17 @@ public class ServerActivity extends AppCompatActivity {
                     System.out.println("client address: "+clientAddress);
                     Log.d("bluetooth-debug","request for connection thread");
                     btService.startConnectThread(clientAddress);
-                    btService.getChannel().setOnMessageReceivedListener(new BluetoothService.OnMessageReceivedListener() {
-                        @Override
-                        public void process(byte[] buffer) {
-                            if (buffer != null){
-                                String string = new String(buffer, StandardCharsets.UTF_8);
-                                Log.d("bluetooth-debug", string);
-                            }else {
-                                Log.d("bluetooth-debug","buffer is empty");
-                            }
-                        }
-                    });
+//                    btService.getChannel().setOnMessageReceivedListener(new BluetoothService.OnMessageReceivedListener() {
+//                        @Override
+//                        public void process(byte[] buffer) {
+//                            if (buffer != null){
+//                                String string = new String(buffer, StandardCharsets.UTF_8);
+//                                Log.d("bluetooth-debug", string);
+//                            }else {
+//                                Log.d("bluetooth-debug","buffer is empty");
+//                            }
+//                        }
+//                    });
                 }
                 break;
         }
