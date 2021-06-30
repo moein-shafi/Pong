@@ -1,6 +1,5 @@
 package com.example.pong;
 
-import android.view.View;
 import android.widget.ImageView;
 import android.util.Pair;
 
@@ -62,7 +61,6 @@ public class Ball {
         this.checkCollision();
         this.x0 += this.vx0 * deltaT;
         this.y0 += this.vy0 * deltaT;
-//        this.updateImageLocation();
     }
 
     public void showBall(){
@@ -157,7 +155,6 @@ public class Ball {
             collideBallFromWall(0);
             this.y0 -= SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
         }
-
         else if (this.x0 <= (float)this.coordinations.get(1).first) {
             if (this.y0 > racket1.getStartY() && this.y0 < racket1.getStopY() ||
                     this.y0 + 2 * radius > racket1.getStartY() && this.y0  + 2 * radius < racket1.getStopY()) {
@@ -174,13 +171,11 @@ public class Ball {
             }
             this.x0 += SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
         }
-
         else if (this.y0 < (this.x0 * (float)this.boardLines.get(2).first + (float)this.boardLines.get(2).second)) {
             collideBallFromWall(2);
             this.y0 += SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
 
         }
-
         else if (this.y0 < (this.x0 + 2 * radius) * (float)this.boardLines.get(3).first + (float)this.boardLines.get(3).second) {
             if (this.x0 > racket2.getStartX() && this.x0 < racket2.getStopX() ||
                     this.x0 + 2 * radius > racket2.getStartX() && this.x0 + 2 * radius < racket2.getStopX()) {
@@ -196,12 +191,10 @@ public class Ball {
                     this.increasePlayerScore();
             }
         }
-
         else if (this.x0 + 2 * this.radius >= (float)this.coordinations.get(4).first) {
             this.vx0 *= -1;
             this.x0 -= SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
         }
-
         else if (this.y0 + 2 * this.radius > (this.x0 + 2 * radius) * (float)this.boardLines.get(5).first + (float)this.boardLines.get(5).second) {
             if (this.x0 > racket3.getStopX() && this.x0 < racket3.getStartX() ||
                     this.x0 + 2 * radius > racket3.getStopX() && this.x0 + 2 * radius < racket3.getStartX()) {
@@ -210,7 +203,6 @@ public class Ball {
                 this.y0 -= SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
                 this.increaseVelocity();
             }
-
             else {
                 if (lastHit == 3)
                     this.decreasePlayerScore();
@@ -218,9 +210,7 @@ public class Ball {
                     this.increasePlayerScore();
             }
         }
-
-
-}
+    }
 
     public void updateImageLocation() {
         imageView.setX(this.x0);
@@ -262,8 +252,6 @@ public class Ball {
         if (coordinations.size() < 6) {
             return 0.5f;
         }
-//        return x0 / (coordinations.get(4).first - coordinations.get(2).first);
-//        return pixelToPercentageX(x0);
         return pixelToPercentageX(x0);
 
     }
@@ -272,11 +260,8 @@ public class Ball {
         if (coordinations.size() < 6) {
             return 0.5f;
         }
-//        return y0 / (coordinations.get(0).second - coordinations.get(3).second);
         return pixelToPercentageY(y0);
     }
-
-
 
     public float pixelToPercentageX(float pixelInput) {
         return pixelInput / (coordinations.get(4).first - coordinations.get(2).first);
@@ -295,6 +280,4 @@ public class Ball {
     public void setY0ByPercentage(float yPercentage) {
         y0 = yPercentage * (coordinations.get(0).second - coordinations.get(3).second);
     }
-
-
 }

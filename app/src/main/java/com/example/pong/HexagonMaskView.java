@@ -283,7 +283,6 @@ public class HexagonMaskView extends View {
     public void setRacketCoordsByPercentage(int racketNo, float percentage){
         switch (racketNo){
             case 1:
-//                            return (this.initialYRacket1 - coordinations.get(2).second) / (coordinations.get(1).second - coordinations.get(2).second);
                 Log.d("bluetooth-debug-R1-Y-b", String.valueOf(this.initialYRacket1));
                 this.initialYRacket1 = (percentage * (coordinations.get(1).second - coordinations.get(2).second)) + coordinations.get(2).second;
                 Log.d("bluetooth-debug-R1-Y-a", String.valueOf(this.initialYRacket1));
@@ -300,9 +299,7 @@ public class HexagonMaskView extends View {
                 Log.d("bluetooth-debug-R2-Y-a", String.valueOf(this.initialYRacket2));
 
                 Log.d("bluetooth-debug-R2-X-b", String.valueOf(this.initialXRacket2));
-//                this.initialXRacket2 = (float) Math.sqrt(3) * this.initialYRacket2;
                 this.initialXRacket2 = ((float) Math.sqrt(3) * deltaY2) + coordinations.get(3).first ;
-//                this.initialXRacket2 = (float) Math.sqrt(3) * (percentage *(coordinations.get(4).first - coordinations.get(3).first) + coordinations.get(3).first);
                 Log.d("bluetooth-debug-R2-X-a", String.valueOf(this.initialXRacket2));
                 Log.d("bluetooth-debug", "--------------------------------------------------------\n");
                 calculateRacket2Position();
@@ -316,7 +313,6 @@ public class HexagonMaskView extends View {
 
                 Log.d("bluetooth-debug-R3-X-b", String.valueOf(this.initialXRacket2));
                 this.initialXRacket3 = ((-1) * (float) Math.sqrt(3) * deltaY3) + coordinations.get(5).first ;
-//                this.initialXRacket3 = (float) Math.sqrt(3) * (percentage *(coordinations.get(5).first - coordinations.get(0).first) + coordinations.get(0).first);
                 Log.d("bluetooth-debug-R3-X-a", String.valueOf(this.initialXRacket2));
                 Log.d("bluetooth-debug-", "------------------------------------------------------\n");
                 calculateRacket3Position();
@@ -329,26 +325,13 @@ public class HexagonMaskView extends View {
     public float pixelToPercentageRacket(int racketNo) {
         if (racketNo == 1){
             Log.d("bluetooth-debug-R1-Y", String.valueOf(this.initialYRacket1));
-//            Log.d("bluetooth-debug-R1-X", String.valueOf(this.initialXRacket1));
             Log.d("bluetooth-debug-R1-c2",String.valueOf(coordinations.get(2).second));
-//            Log.d("bluetooth-debug-R1-c1",String.valueOf(coordinations.get(1).second));
-//            Log.d("bluetooth-debug-R1-sor", String.valueOf((racket1.getY() - (2*height/7))));
             return (this.initialYRacket1 - coordinations.get(2).second) / (coordinations.get(1).second - coordinations.get(2).second);
         }
-        else if(racketNo == 2){
-//            Log.d("bluetooth-debug-R2-Y", String.valueOf(this.initialYRacket2));
-//            Log.d("bluetooth-debug-R2-X", String.valueOf(this.initialXRacket2));
-//            Log.d("bluetooth-debug-R2-getY",String.valueOf(racket2.getY()));
-//            Log.d("bluetooth-debug-R1-c3",String.valueOf(coordinations.get(3).second));
+        else if(racketNo == 2)
             return (this.initialYRacket2 - coordinations.get(3).second) / (coordinations.get(4).second - coordinations.get(3).second);
-        }
-        else if(racketNo == 3){
-//            Log.d("bluetooth-debug-R3-Y", String.valueOf(this.initialYRacket3));
-//            Log.d("bluetooth-debug-R3-X", String.valueOf(this.initialXRacket3));
-//            Log.d("bluetooth-debug-R3-getY",String.valueOf(racket3.getY()));
-//            Log.d("bluetooth-debug-R1-c5",String.valueOf(coordinations.get(3).second));
+        else if(racketNo == 3)
             return (this.initialYRacket3 - coordinations.get(5).second) / (coordinations.get(0).second - coordinations.get(5).second);
-        }
         return 0;
     }
 

@@ -101,17 +101,6 @@ public class ClientActivity extends AppCompatActivity {
                             GameActivity.setIsServer(false);
                             startActivity(new Intent(ClientActivity.this,
                                     GameActivity.class));
-
-//                            if (btService.isServer()) {
-////                                GameData.getInstance().setServer(true);
-////                                startActivity(new Intent(DeviceChooserActivity.this,
-////                                        BattleActivity.class));
-//                            } else {
-////                                GameData.getInstance().setServer(false);
-////                                startActivity(new Intent(DeviceChooserActivity.this,
-////                                        BattleActivity.class));
-//                            }
-                            // finish();
                         }
                     });
                 }
@@ -119,12 +108,6 @@ public class ClientActivity extends AppCompatActivity {
         }
     };
     private void initBt() {
-//        Set<BluetoothDevice> paired = btService.getBluetoothAdapter().getBondedDevices();
-//        for (BluetoothDevice device : paired) {
-//            arrayAdapter.add(device.getName() + "\n" + device.getAddress());
-//        }
-
-
         btService.startAcceptThread();
         Log.d("bluetooth-debug","accept thread started");
     }
@@ -142,26 +125,9 @@ public class ClientActivity extends AppCompatActivity {
     }
 
     public void turnOff(View view){
-//        if (mBluetoothAdapter.isEnabled()){
-//            mBluetoothAdapter.disable();
-//            Toast.makeText(this,"Turning Bluetooth off",Toast.LENGTH_SHORT).show();
-//        }
-//        else{
-//            Toast.makeText(this,"Bluetooth is already off",Toast.LENGTH_SHORT).show();
-//        }
         String salaam = "salaam doost";
         btService.getChannel().send(salaam.getBytes(StandardCharsets.UTF_8));
-//        btService.getChannel().setOnMessageReceivedListener(new BluetoothService.OnMessageReceivedListener() {
-//            @Override
-//            public void process(byte[] buffer) {
-//
-//            }
-//        });
     }
-
-
-
-
 
     public void receive(View view){
 
@@ -173,7 +139,6 @@ public class ClientActivity extends AppCompatActivity {
             Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             startActivityForResult(intent,REQUEST_DISCOVER_BT);
         }
-
     }
 
     public void connect(View view) {
@@ -199,7 +164,6 @@ public class ClientActivity extends AppCompatActivity {
             case REQUEST_CONNECT_DEVICE_SECURE:
                 // When DeviceListActivity returns with a device to connect
                 if (resultCode == Activity.RESULT_OK) {
-//                    connectDevice(data, true);
                     Bundle extras = data.getExtras();
                     if (extras == null) {
                         return;
@@ -208,17 +172,7 @@ public class ClientActivity extends AppCompatActivity {
                     System.out.println("client address: "+clientAddress);
                     Log.d("bluetooth-debug","request for connection thread");
                     btService.startConnectThread(clientAddress);
-//                    btService.getChannel().setOnMessageReceivedListener(new BluetoothService.OnMessageReceivedListener() {
-//                        @Override
-//                        public void process(byte[] buffer) {
-//                            if (buffer != null){
-//                                String string = new String(buffer, StandardCharsets.UTF_8);
-//                                Log.d("bluetooth-debug", string);
-//                            }else {
-//                                Log.d("bluetooth-debug","buffer is empty");
-//                            }
-//                        }
-//                    });
+
                 }
                 break;
         }
@@ -232,32 +186,4 @@ public class ClientActivity extends AppCompatActivity {
         }
         super.onStop();
     }
-
-    @Override
-    protected void onDestroy() {
-//        if (btService.getBluetoothAdapter() != null) {
-//            btService.getBluetoothAdapter().cancelDiscovery();
-//        }
-////        unregisterReceiver(broadcastReceiver);
-//        if (btService != null && shouldStop) {
-////            Log.d("DeviceChooser", "onDestroy: BtService is STOPPING!");
-////            btService.stopSelf();
-////            btService = null;
-//        }
-//        unbindService(connection);
-        super.onDestroy();
-    }
-//    private void connectDevice(Intent data, boolean secure) {
-//        // Get the device MAC address
-//        Bundle extras = data.getExtras();
-//        if (extras == null) {
-//            return;
-//        }
-//        String clientAddress = extras.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-//        // Get the BluetoothDevice object
-//        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(clientAddress);
-//
-//
-//        mChatService.connect(device, secure);
-//    }
 }
