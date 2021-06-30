@@ -91,7 +91,7 @@ public class GameActivity extends AppCompatActivity {
                     String data = new String(buffer, StandardCharsets.UTF_8);
                     Log.d("bluetooth-debug-data", data);
                     List <String> parsedData = parseData(data);
-                    if (parsedData.size() == 8) {
+                    if (parsedData.size() == 9) {
 
                         ball.setX0ByPercentage(Float.parseFloat(parsedData.get(0)));
                         ball.setY0ByPercentage(Float.parseFloat(parsedData.get(1)));
@@ -103,6 +103,7 @@ public class GameActivity extends AppCompatActivity {
                         player1.setScore(Integer.parseInt(parsedData.get(5)));
                         player2.setScore(Integer.parseInt(parsedData.get(6)));
                         player3.setScore(Integer.parseInt(parsedData.get(7)));
+                        Log.d("bluetooth-debug-ping", String.valueOf(Long.parseLong(parsedData.get(8)) - System.currentTimeMillis()));
                     }
 
                 }else if( buffer != null && isServer){
@@ -190,7 +191,8 @@ public class GameActivity extends AppCompatActivity {
                       compactFloat(hexaView.pixelToPercentageRacket(1)) + ',' +
                       compactFloat(hexaView.pixelToPercentageRacket(2)) + ',' +
                       compactFloat(hexaView.pixelToPercentageRacket(3)) + ',' +
-                      player1.getScore() + ',' + player2.getScore() + ',' + player3.getScore();
+                      player1.getScore() + ',' + player2.getScore() + ',' + player3.getScore()+ ',' +
+                      System.currentTimeMillis();
 
         bluetoothService.getChannel().sendString(data);
     }
