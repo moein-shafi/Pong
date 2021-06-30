@@ -130,25 +130,13 @@ public class ServerActivity extends AppCompatActivity {
     }
 
     public void turnOff(View view){
-        String salaam = "salaam doost";
-        btService.getChannel().send(salaam.getBytes(StandardCharsets.UTF_8));
-    }
-
-
-
-
-
-    public void receive(View view){
-
-    }
-
-    public void discoverable(View view){
-        if (!mBluetoothAdapter.isDiscovering()){
-            Toast.makeText(this,"Making your device Discoverable",Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            startActivityForResult(intent,REQUEST_DISCOVER_BT);
+        if (mBluetoothAdapter.isEnabled()){
+            mBluetoothAdapter.disable();
+            Toast.makeText(this,"Turning Bluetooth off",Toast.LENGTH_SHORT).show();
         }
-
+        else{
+            Toast.makeText(this,"Bluetooth is already off",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void connect(View view) {

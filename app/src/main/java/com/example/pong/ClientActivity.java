@@ -36,7 +36,7 @@ public class ClientActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_server);
+        setContentView(R.layout.activity_client_page);
         Log.d("bluetooth-debug","request for service");
         bindService(new Intent(this,BluetoothService.class),connection,BIND_AUTO_CREATE);
         Log.d("bluetooth-debug","after request for service");
@@ -125,12 +125,13 @@ public class ClientActivity extends AppCompatActivity {
     }
 
     public void turnOff(View view){
-        String salaam = "salaam doost";
-        btService.getChannel().send(salaam.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public void receive(View view){
-
+        if (mBluetoothAdapter.isEnabled()){
+            mBluetoothAdapter.disable();
+            Toast.makeText(this,"Turning Bluetooth off",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(this,"Bluetooth is already off",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void discoverable(View view){
@@ -138,15 +139,6 @@ public class ClientActivity extends AppCompatActivity {
             Toast.makeText(this,"Making your device Discoverable",Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             startActivityForResult(intent,REQUEST_DISCOVER_BT);
-        }
-    }
-
-    public void connect(View view) {
-        if (mBluetoothAdapter.isEnabled()) {
-            Intent serverIntent = new Intent(this, DeviceListActivity.class);
-            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
-        } else {
-            Toast.makeText(this, "Turn on bluetooth to get paired devices", Toast.LENGTH_SHORT).show();
         }
     }
 
