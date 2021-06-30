@@ -216,7 +216,7 @@ public class GameActivity extends AppCompatActivity {
                 ball.showBall();
                 showScores();
             }
-        }, 0, 10000);
+        }, 0, 17);
     }
 
     private void sendCoordsToClient() {
