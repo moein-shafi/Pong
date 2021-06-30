@@ -89,7 +89,7 @@ public class GameActivity extends AppCompatActivity {
             public void process(byte[] buffer) {
                 if (buffer != null && !isServer){
                     String data = new String(buffer, StandardCharsets.UTF_8);
-                    Log.d("bluetooth-debug-data", data);
+//                    Log.d("bluetooth-debug-data", data);
                     List <String> parsedData = parseData(data);
                     if (parsedData.size() == 9) {
 
