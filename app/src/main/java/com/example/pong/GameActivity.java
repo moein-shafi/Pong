@@ -27,7 +27,7 @@ public class GameActivity extends AppCompatActivity {
     public static final float BALL_INCREASE_V_RATIO = 1.05f;
     public static final int RACKET_SIZE = 8;
     private static boolean isServer;
-
+    private HexagonMaskView hexaView;
     public static void setIsServer(boolean isServer) {
         GameActivity.isServer = isServer;
     }
@@ -92,22 +92,29 @@ public class GameActivity extends AppCompatActivity {
         bluetoothService.getChannel().setOnMessageReceivedListener(new BluetoothService.OnMessageReceivedListener() {
             @Override
             public void process(byte[] buffer) {
-                if (buffer != null){
+                if (buffer != null && !isServer){
                     String data = new String(buffer, StandardCharsets.UTF_8);
                     Log.d("bluetooth-debug", data);
                     List <String> parsedData = parseData(data);
                     if (parsedData.size() == 8) {
+                        Log.d("bluetooth-debug", "reading 8 data particles");
+
                         ball.setX0ByPercentage(Float.parseFloat(parsedData.get(0)));
                         ball.setY0ByPercentage(Float.parseFloat(parsedData.get(1)));
 
-                        ball.getRacket1().setY(Float.parseFloat(parsedData.get(2))); //TODO: percent -> pixel
-//                        ball.getRacket1().setX(Float.parseFloat(parsedData.get(2)));
+                        hexaView.setRacketCoordsByPercentage(1,Float.parseFloat(parsedData.get(2)));
+                        hexaView.setRacketCoordsByPercentage(2,Float.parseFloat(parsedData.get(3)));
+                        hexaView.setRacketCoordsByPercentage(3,Float.parseFloat(parsedData.get(4)));
 
-                        ball.getRacket2().setY(Float.parseFloat(parsedData.get(3))); //TODO: percent -> pixel
-                        ball.getRacket2().setX((Float.parseFloat(parsedData.get(3)) - ball.getBoardLines().get(3).second)/ball.getBoardLines().get(3).first); // x = (y-b)/a
 
-                        ball.getRacket3().setY(Float.parseFloat(parsedData.get(4)));
-                        ball.getRacket3().setX((Float.parseFloat(parsedData.get(4)) - ball.getBoardLines().get(5).second)/ball.getBoardLines().get(5).first); // x = (y-b)/a
+//                        ball.getRacket1().setY(Float.parseFloat(parsedData.get(2))); //TODO: percent -> pixel
+////                        ball.getRacket1().setX(Float.parseFloat(parsedData.get(2)));
+//
+//                        ball.getRacket2().setY(Float.parseFloat(parsedData.get(3))); //TODO: percent -> pixel
+//                        ball.getRacket2().setX((Float.parseFloat(parsedData.get(3)) - ball.getBoardLines().get(3).second)/ball.getBoardLines().get(3).first); // x = (y-b)/a
+//
+//                        ball.getRacket3().setY(Float.parseFloat(parsedData.get(4)));
+//                        ball.getRacket3().setX((Float.parseFloat(parsedData.get(4)) - ball.getBoardLines().get(5).second)/ball.getBoardLines().get(5).first); // x = (y-b)/a
 
                         player1.setScore(Integer.parseInt(parsedData.get(5)));
                         player2.setScore(Integer.parseInt(parsedData.get(6)));
@@ -133,7 +140,17 @@ public class GameActivity extends AppCompatActivity {
 //                        player3.setScore(Integer.parseInt(parsedData.get(16)));
 
                     }
-                }else {
+
+                }else if( buffer != null && isServer){
+                    String data = new String(buffer, StandardCharsets.UTF_8);
+                    Log.d("bluetooth-debug", "else in server");
+                    List <String> parsedData = parseData(data);
+                    Log.d("bluetooth-debug-data", data);
+                    if (parsedData.size() == 2) {
+//                        Log.d("bluetooth-debug-parsed", parsedData);
+                        hexaView.setRacketCoordsByPercentage((int) Float.parseFloat(parsedData.get(0)),Float.parseFloat(parsedData.get(1)));
+                    }
+                } else {
                     Log.d("bluetooth-debug","buffer is empty");
                 }
             }
@@ -161,21 +178,8 @@ public class GameActivity extends AppCompatActivity {
 
     public void startGame(View view) {
         Log.d("bluetooth-debug","before send");
-//        if (bluetoothService.getChannel() == null){
-//            Log.d("bluetooth-debug","service nulllll");
-//        }else {
-//            Log.d("bluetooth-debug","service ok");
-//        }
 
-//        if (!isServer) {
-//            return;
-//        }
-
-//        String salaam = "salaam doost";
-//        bluetoothService.getChannel().send(salaam.getBytes(StandardCharsets.UTF_8));
-//        Log.d("bluetooth-debug","after send");
-
-        HexagonMaskView hexaView = findViewById(R.id.hexagonBoard);
+        this.hexaView = findViewById(R.id.hexagonBoard);
         this.board = new Board(hexaView.getCoordinations());
         this.ball.setBoardLines(this.board.getLines());
         this.ball.setBoardCoordinations(this.board.getCoordinations());
@@ -212,31 +216,28 @@ public class GameActivity extends AppCompatActivity {
                 ball.showBall();
                 showScores();
             }
-        }, 0, 17);
+        }, 0, 10000);
     }
 
     private void sendCoordsToClient() {
-
-//        ball.getX0();
-//        ball.getY0();
-//        String data = Float.toString(ball.getXPercentage()) + ',' + Float.toString(ball.getYPercentage());
+        String data = Float.toString(ball.getXPercentage()) + ',' + ball.getYPercentage() + ',' +
 
 //        Log.d("bluetooth-debug", data);
-        String data = "" + ball.pixelToPercentageX(ball.getX0()) + ',' + ball.pixelToPercentageY(ball.getY0()) + ',' +
+//        String data = "" + ball.pixelToPercentageX(ball.getX0()) + ',' + ball.pixelToPercentageY(ball.getY0()) + ',' +
 
-                      ball.pixelToPercentageRacket(1) + ',' +
+                         hexaView.pixelToPercentageRacket(1) + ',' +
 //                      ball.pixelToPercentageRacket(ball.getRacket1().getStopX(),1) + ',' +
 //                      ball.pixelToPercentageRacket(ball.getRacket1().getStartY(),1) + ',' +
 //                      ball.pixelToPercentageRacket(ball.getRacket1().getStopY(),1) + ',' +
 
 
-                      ball.pixelToPercentageRacket(2) + ',' +
+                      hexaView.pixelToPercentageRacket(2) + ',' +
 //                      ball.pixelToPercentageRacket(ball.getRacket2().getStopX(),2) + ',' +
 //                      ball.pixelToPercentageRacket(ball.getRacket2().getStartY(),2) + ',' +
 //                      ball.pixelToPercentageRacket(ball.getRacket2().getStopY(),2) + ',' +
 
 
-                      ball.pixelToPercentageRacket(3) + ',' +
+                      hexaView.pixelToPercentageRacket(3) + ',' +
 //                      ball.pixelToPercentageRacket(ball.getRacket3().getStopX(),3) + ',' +
 //                      ball.pixelToPercentageRacket(ball.getRacket3().getStartY(),3) + ',' +
 //                      ball.pixelToPercentageRacket(ball.getRacket3().getStopY(),3) + ',' +
@@ -254,7 +255,6 @@ public class GameActivity extends AppCompatActivity {
 
 //        data += Integer.toString(lastScore1) + ',' + Integer.toString(lastScore2) + ',' + Integer.toString(lastScore3);
         //TODO: add scores
-        //TODO: check if we should also send V
         bluetoothService.getChannel().sendString(data);
     }
 
@@ -323,6 +323,7 @@ public class GameActivity extends AppCompatActivity {
     public void racketButton1Left(View view) {
         HexagonMaskView view2 = findViewById(R.id.hexagonBoard);
         view2.racket1Left();
+
     }
 
     public void racketButton1Right(View view) {
@@ -333,21 +334,40 @@ public class GameActivity extends AppCompatActivity {
     public void racketButton2Left(View view) {
         HexagonMaskView view2 = findViewById(R.id.hexagonBoard);
         view2.racket2Left();
+        if (!isServer){
+            sendNewRacketPosition(2);
+        }
+
     }
 
     public void racketButton2Right(View view) {
         HexagonMaskView view2 = findViewById(R.id.hexagonBoard);
         view2.racket2Right();
+        if (!isServer){
+            sendNewRacketPosition(2);
+        }
     }
 
     public void racketButton3Left(View view) {
         HexagonMaskView view2 = findViewById(R.id.hexagonBoard);
         view2.racket3Left();
+        if (!isServer){
+            sendNewRacketPosition(3);
+        }
     }
 
     public void racketButton3Right(View view) {
         HexagonMaskView view2 = findViewById(R.id.hexagonBoard);
         view2.racket3Right();
+        if (!isServer){
+            sendNewRacketPosition(3);
+        }
+    }
+
+    public void sendNewRacketPosition(int racketNumber){
+        String data = "" + racketNumber + "," + hexaView.pixelToPercentageRacket(racketNumber);
+        Log.d("bluetooth-debug-cl-r", "client is sending racket position");
+        bluetoothService.getChannel().sendString(data);
     }
 
     public void showScores(View view) {

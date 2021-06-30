@@ -276,18 +276,10 @@ public class Ball {
         return pixelToPercentageY(y0);
     }
 
-    
-    public float pixelToPercentageRacket(int racketNo) {
-        if (racketNo == 1)
-            return (racket1.getY() - coordinations.get(2).second) / (coordinations.get(1).second - coordinations.get(2).second);
-        if(racketNo == 2)
-            return (racket2.getY() - coordinations.get(3).second) / (coordinations.get(4).second - coordinations.get(3).second);
-        else
-            return (racket3.getY() - coordinations.get(5).second) / (coordinations.get(0).second - coordinations.get(5).second);
-    }
+
 
     public float pixelToPercentageX(float pixelInput) {
-        return pixelInput / (coordinations.get(4).second - coordinations.get(2).second);
+        return pixelInput / (coordinations.get(4).first - coordinations.get(2).first);
     }
 
 

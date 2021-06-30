@@ -99,8 +99,8 @@
             android:id="@+id/hexagonBoard"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="31dp"
-            tools:layout_editor_absoluteY="78dp" />
+            tools:layout_editor_absoluteX="68dp"
+            tools:layout_editor_absoluteY="43dp" />
 
         <ImageView
             android:id="@+id/ball"
