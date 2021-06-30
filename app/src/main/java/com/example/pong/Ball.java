@@ -12,9 +12,27 @@ public class Ball {
 
     int radius;
     ImageView imageView;
+    
     ArrayList<Pair<Float, Float>> boardLines = new ArrayList<>();
     ArrayList<Pair<Float, Float>> coordinations = new ArrayList<>();
     private Racket racket1;
+
+    public Racket getRacket1() {
+        return racket1;
+    }
+
+    public Racket getRacket2() {
+        return racket2;
+    }
+
+    public Racket getRacket3() {
+        return racket3;
+    }
+
+    public ArrayList<Pair<Float, Float>> getBoardLines() {
+        return boardLines;
+    }
+
     private Racket racket2;
     private Racket racket3;
     private int lastHit = 1;
@@ -44,6 +62,10 @@ public class Ball {
         this.checkCollision();
         this.x0 += this.vx0 * deltaT;
         this.y0 += this.vy0 * deltaT;
+//        this.updateImageLocation();
+    }
+
+    public void showBall(){
         this.updateImageLocation();
     }
 
@@ -113,8 +135,8 @@ public class Ball {
     }
 
     private void increaseVelocity() {
-        this.vx0 *= MainActivity.BALL_INCREASE_V_RATIO;
-        this.vy0 *= MainActivity.BALL_INCREASE_V_RATIO;
+        this.vx0 *= SingleDeviceActivity.BALL_INCREASE_V_RATIO;
+        this.vy0 *= SingleDeviceActivity.BALL_INCREASE_V_RATIO;
     }
 
     private void collideBallFromWall(int WallId) {
@@ -133,7 +155,7 @@ public class Ball {
     private void checkCollision() {
         if (this.y0 + 2 * this.radius > (this.x0 * (float)this.boardLines.get(0).first + (float)this.boardLines.get(0).second)) {
             collideBallFromWall(0);
-            this.y0 -= MainActivity.WALL_MINIMUM_THRESHOLD;
+            this.y0 -= SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
         }
 
         else if (this.x0 <= (float)this.coordinations.get(1).first) {
@@ -150,12 +172,12 @@ public class Ball {
                 else
                     this.increasePlayerScore();
             }
-            this.x0 += MainActivity.WALL_MINIMUM_THRESHOLD;
+            this.x0 += SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
         }
 
         else if (this.y0 < (this.x0 * (float)this.boardLines.get(2).first + (float)this.boardLines.get(2).second)) {
             collideBallFromWall(2);
-            this.y0 += MainActivity.WALL_MINIMUM_THRESHOLD;
+            this.y0 += SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
 
         }
 
@@ -164,7 +186,7 @@ public class Ball {
                     this.x0 + 2 * radius > racket2.getStartX() && this.x0 + 2 * radius < racket2.getStopX()) {
                 lastHit = 2;
                 collideBallFromWall(3);
-                this.y0 += MainActivity.WALL_MINIMUM_THRESHOLD;
+                this.y0 += SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
                 this.increaseVelocity();
             }
             else {
@@ -177,7 +199,7 @@ public class Ball {
 
         else if (this.x0 + 2 * this.radius >= (float)this.coordinations.get(4).first) {
             this.vx0 *= -1;
-            this.x0 -= MainActivity.WALL_MINIMUM_THRESHOLD;
+            this.x0 -= SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
         }
 
         else if (this.y0 + 2 * this.radius > (this.x0 + 2 * radius) * (float)this.boardLines.get(5).first + (float)this.boardLines.get(5).second) {
@@ -185,7 +207,7 @@ public class Ball {
                     this.x0 + 2 * radius > racket3.getStopX() && this.x0 + 2 * radius < racket3.getStartX()) {
                 lastHit = 3;
                 collideBallFromWall(5);
-                this.y0 -= MainActivity.WALL_MINIMUM_THRESHOLD;
+                this.y0 -= SingleDeviceActivity.WALL_MINIMUM_THRESHOLD;
                 this.increaseVelocity();
             }
 
@@ -227,4 +249,52 @@ public class Ball {
     public void setVy0(float vy0) {
         this.vy0 = vy0;
     }
+
+    public float getX0() {
+        return x0;
+    }
+
+    public float getY0() {
+        return y0;
+    }
+
+    public float getXPercentage() {
+        if (coordinations.size() < 6) {
+            return 0.5f;
+        }
+//        return x0 / (coordinations.get(4).first - coordinations.get(2).first);
+//        return pixelToPercentageX(x0);
+        return pixelToPercentageX(x0);
+
+    }
+
+    public float getYPercentage() {
+        if (coordinations.size() < 6) {
+            return 0.5f;
+        }
+//        return y0 / (coordinations.get(0).second - coordinations.get(3).second);
+        return pixelToPercentageY(y0);
+    }
+
+
+
+    public float pixelToPercentageX(float pixelInput) {
+        return pixelInput / (coordinations.get(4).first - coordinations.get(2).first);
+    }
+
+
+    public float pixelToPercentageY(float pixelInput) {
+        return pixelInput / (coordinations.get(0).second - coordinations.get(3).second);
+    }
+
+
+    public void setX0ByPercentage(float xPercentage) {
+        x0 = xPercentage * (coordinations.get(4).first - coordinations.get(2).first);
+    }
+
+    public void setY0ByPercentage(float yPercentage) {
+        y0 = yPercentage * (coordinations.get(0).second - coordinations.get(3).second);
+    }
+
+
 }

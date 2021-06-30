@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 
@@ -31,6 +32,7 @@ public class HexagonMaskView extends View {
     private float initialYRacket1;
     private float initialYRacket2;
     private float initialYRacket3;
+    private boolean initial = true;
 
     public HexagonMaskView(Context context) {
         super(context);
@@ -166,16 +168,16 @@ public class HexagonMaskView extends View {
 
 
     public void racket1Left() {
-        if ((this.initialYRacket1 - (radius/8) - MainActivity.Rocket_Movement) >= (float)this.coordinations.get(2).second) {
-            this.initialYRacket1 -= MainActivity.Rocket_Movement;
+        if ((this.initialYRacket1 - (radius/8) - SingleDeviceActivity.Rocket_Movement) >= (float)this.coordinations.get(2).second) {
+            this.initialYRacket1 -= SingleDeviceActivity.Rocket_Movement;
             this.calculateRacket1Position();
             this.invalidate();
         }
     }
 
     public void racket1Right() {
-        if (this.initialYRacket1 + (radius/10) + MainActivity.Rocket_Movement <= (float)this.coordinations.get(1).second) {
-            this.initialYRacket1 += MainActivity.Rocket_Movement;
+        if (this.initialYRacket1 + (radius/10) + SingleDeviceActivity.Rocket_Movement <= (float)this.coordinations.get(1).second) {
+            this.initialYRacket1 += SingleDeviceActivity.Rocket_Movement;
             this.calculateRacket1Position();
             this.invalidate();
         }
@@ -183,9 +185,9 @@ public class HexagonMaskView extends View {
 
     public void racket2Left() {
 
-        if (this.racket2.getStartY() - MainActivity.Rocket_Movement > (float)this.coordinations.get(3).second) {
-            this.initialXRacket2 -= Math.sqrt(3) * MainActivity.Rocket_Movement;
-            this.initialYRacket2 -= MainActivity.Rocket_Movement;
+        if (this.racket2.getStartY() - SingleDeviceActivity.Rocket_Movement > (float)this.coordinations.get(3).second) {
+            this.initialXRacket2 -= Math.sqrt(3) * SingleDeviceActivity.Rocket_Movement;
+            this.initialYRacket2 -= SingleDeviceActivity.Rocket_Movement;
             this.calculateRacket2Position();
             this.invalidate();
         }
@@ -193,18 +195,18 @@ public class HexagonMaskView extends View {
 
     public void racket2Right() {
 
-        if (this.racket2.getStopY() + MainActivity.Rocket_Movement <= (float)this.coordinations.get(4).second) {
-            this.initialXRacket2 += Math.sqrt(3) * MainActivity.Rocket_Movement;
-            this.initialYRacket2 += MainActivity.Rocket_Movement;
+        if (this.racket2.getStopY() + SingleDeviceActivity.Rocket_Movement <= (float)this.coordinations.get(4).second) {
+            this.initialXRacket2 += Math.sqrt(3) * SingleDeviceActivity.Rocket_Movement;
+            this.initialYRacket2 += SingleDeviceActivity.Rocket_Movement;
             this.calculateRacket2Position();
             this.invalidate();
         }
     }
 
     public void racket3Left() {
-        if (this.racket3.getStopY() + MainActivity.Rocket_Movement <= (float)this.coordinations.get(0).second) {
-            this.initialXRacket3 -= Math.sqrt(3) * MainActivity.Rocket_Movement;
-            this.initialYRacket3 += MainActivity.Rocket_Movement;
+        if (this.racket3.getStopY() + SingleDeviceActivity.Rocket_Movement <= (float)this.coordinations.get(0).second) {
+            this.initialXRacket3 -= Math.sqrt(3) * SingleDeviceActivity.Rocket_Movement;
+            this.initialYRacket3 += SingleDeviceActivity.Rocket_Movement;
             this.calculateRacket3Position();
             this.invalidate();
         }
@@ -212,9 +214,9 @@ public class HexagonMaskView extends View {
 
     public void racket3Right() {
 
-        if (this.racket3.getStartY() - MainActivity.Rocket_Movement >= (float)this.coordinations.get(5).second) {
-            this.initialXRacket3 += Math.sqrt(3) * MainActivity.Rocket_Movement;
-            this.initialYRacket3 -= MainActivity.Rocket_Movement;
+        if (this.racket3.getStartY() - SingleDeviceActivity.Rocket_Movement >= (float)this.coordinations.get(5).second) {
+            this.initialXRacket3 += Math.sqrt(3) * SingleDeviceActivity.Rocket_Movement;
+            this.initialYRacket3 -= SingleDeviceActivity.Rocket_Movement;
             this.calculateRacket3Position();
             this.invalidate();
         }
@@ -230,12 +232,15 @@ public class HexagonMaskView extends View {
         this.triangleHeight = (float) (Math.sqrt(3) * radius / 2);
         this.centerX = width / 2;
         this.centerY = height / 2;
-        initialXRacket1 = centerX - triangleHeight;
-        initialYRacket1 = centerY;
-        initialXRacket2 = centerX + triangleHeight / 2;
-        initialYRacket2 = (float) (centerY - 0.75 * radius);
-        initialXRacket3 = centerX + (float) (triangleHeight/2);
-        initialYRacket3 = (float) (centerY + 0.75 * radius);
+        if(initial){
+            initialXRacket1 = centerX - triangleHeight;
+            initialYRacket1 = centerY;
+            initialXRacket2 = centerX + triangleHeight / 2;
+            initialYRacket2 = (float) (centerY - 0.75 * radius);
+            initialXRacket3 = centerX + (float) (triangleHeight/2);
+            initialYRacket3 = (float) (centerY + 0.75 * radius);
+            initial = false;
+        }
         this.initiateCoordinations();
         this.calculateRacketsPosition();
         calculatePath();
@@ -253,26 +258,98 @@ public class HexagonMaskView extends View {
         this.racket1.setY(this.initialYRacket1);
         this.racket1.setStartX(this.initialXRacket1);
         this.racket1.setStopX(this.initialXRacket1);
-        this.racket1.setStartY(this.initialYRacket1 - radius / MainActivity.RACKET_SIZE);
-        this.racket1.setStopY(this.initialYRacket1 + radius / MainActivity.RACKET_SIZE);
+        this.racket1.setStartY(this.initialYRacket1 - radius / SingleDeviceActivity.RACKET_SIZE);
+        this.racket1.setStopY(this.initialYRacket1 + radius / SingleDeviceActivity.RACKET_SIZE);
     }
 
     private void calculateRacket2Position() {
         this.racket2.setX(this.initialXRacket2);
         this.racket1.setY(this.initialYRacket2);
-        this.racket2.setStartX((float) (this.initialXRacket2 - Math.sqrt(3) * radius / (MainActivity.RACKET_SIZE * 2)));
-        this.racket2.setStopX((float) (this.initialXRacket2 + Math.sqrt(3) * radius / (MainActivity.RACKET_SIZE * 2)));
-        this.racket2.setStartY(this.initialYRacket2 - radius / (MainActivity.RACKET_SIZE * 2));
-        this.racket2.setStopY(this.initialYRacket2 + radius / (MainActivity.RACKET_SIZE * 2));
+        this.racket2.setStartX((float) (this.initialXRacket2 - Math.sqrt(3) * radius / (SingleDeviceActivity.RACKET_SIZE * 2)));
+        this.racket2.setStopX((float) (this.initialXRacket2 + Math.sqrt(3) * radius / (SingleDeviceActivity.RACKET_SIZE * 2)));
+        this.racket2.setStartY(this.initialYRacket2 - radius / (SingleDeviceActivity.RACKET_SIZE * 2));
+        this.racket2.setStopY(this.initialYRacket2 + radius / (SingleDeviceActivity.RACKET_SIZE * 2));
     }
 
     private void calculateRacket3Position() {
         this.racket3.setX(this.initialXRacket3);
         this.racket1.setY(this.initialYRacket3);
-        this.racket3.setStartX((float) (this.initialXRacket3 + Math.sqrt(3) * radius / (MainActivity.RACKET_SIZE * 2)));
-        this.racket3.setStopX((float) (this.initialXRacket3 - Math.sqrt(3) * radius / (MainActivity.RACKET_SIZE * 2)));
-        this.racket3.setStartY(this.initialYRacket3 - radius / (MainActivity.RACKET_SIZE * 2));
-        this.racket3.setStopY(this.initialYRacket3 + radius / (MainActivity.RACKET_SIZE * 2));
+        this.racket3.setStartX((float) (this.initialXRacket3 + Math.sqrt(3) * radius / (SingleDeviceActivity.RACKET_SIZE * 2)));
+        this.racket3.setStopX((float) (this.initialXRacket3 - Math.sqrt(3) * radius / (SingleDeviceActivity.RACKET_SIZE * 2)));
+        this.racket3.setStartY(this.initialYRacket3 - radius / (SingleDeviceActivity.RACKET_SIZE * 2));
+        this.racket3.setStopY(this.initialYRacket3 + radius / (SingleDeviceActivity.RACKET_SIZE * 2));
+    }
+
+    public void setRacketCoordsByPercentage(int racketNo, float percentage){
+        switch (racketNo){
+            case 1:
+//                            return (this.initialYRacket1 - coordinations.get(2).second) / (coordinations.get(1).second - coordinations.get(2).second);
+                Log.d("bluetooth-debug-R1-Y-b", String.valueOf(this.initialYRacket1));
+                this.initialYRacket1 = (percentage * (coordinations.get(1).second - coordinations.get(2).second)) + coordinations.get(2).second;
+                Log.d("bluetooth-debug-R1-Y-a", String.valueOf(this.initialYRacket1));
+
+                Log.d("bluetooth-debug-R1-i-X", String.valueOf(this.initialXRacket1));
+                Log.d("bluetooth-debug", "-------------------------------------------------------\n");
+                calculateRacket1Position();
+                this.invalidate();
+                break;
+            case 2:
+                Log.d("bluetooth-debug-R2-Y-b", String.valueOf(this.initialYRacket2));
+                float deltaY2 = (percentage * (coordinations.get(4).second - coordinations.get(3).second));
+                this.initialYRacket2 = deltaY2 + coordinations.get(3).second;
+                Log.d("bluetooth-debug-R2-Y-a", String.valueOf(this.initialYRacket2));
+
+                Log.d("bluetooth-debug-R2-X-b", String.valueOf(this.initialXRacket2));
+//                this.initialXRacket2 = (float) Math.sqrt(3) * this.initialYRacket2;
+                this.initialXRacket2 = ((float) Math.sqrt(3) * deltaY2) + coordinations.get(3).first ;
+//                this.initialXRacket2 = (float) Math.sqrt(3) * (percentage *(coordinations.get(4).first - coordinations.get(3).first) + coordinations.get(3).first);
+                Log.d("bluetooth-debug-R2-X-a", String.valueOf(this.initialXRacket2));
+                Log.d("bluetooth-debug", "--------------------------------------------------------\n");
+                calculateRacket2Position();
+                this.invalidate();
+                break;
+            case 3:
+                Log.d("bluetooth-debug-R3-Y-b", String.valueOf(this.initialYRacket2));
+                float deltaY3 = percentage *(coordinations.get(0).second - coordinations.get(5).second);
+                this.initialYRacket3 = deltaY3 + coordinations.get(5).second;
+                Log.d("bluetooth-debug-R3-Y-a", String.valueOf(this.initialYRacket2));
+
+                Log.d("bluetooth-debug-R3-X-b", String.valueOf(this.initialXRacket2));
+                this.initialXRacket3 = ((-1) * (float) Math.sqrt(3) * deltaY3) + coordinations.get(5).first ;
+//                this.initialXRacket3 = (float) Math.sqrt(3) * (percentage *(coordinations.get(5).first - coordinations.get(0).first) + coordinations.get(0).first);
+                Log.d("bluetooth-debug-R3-X-a", String.valueOf(this.initialXRacket2));
+                Log.d("bluetooth-debug-", "------------------------------------------------------\n");
+                calculateRacket3Position();
+                this.invalidate();
+                break;
+        }
+    }
+
+
+    public float pixelToPercentageRacket(int racketNo) {
+        if (racketNo == 1){
+            Log.d("bluetooth-debug-R1-Y", String.valueOf(this.initialYRacket1));
+//            Log.d("bluetooth-debug-R1-X", String.valueOf(this.initialXRacket1));
+            Log.d("bluetooth-debug-R1-c2",String.valueOf(coordinations.get(2).second));
+//            Log.d("bluetooth-debug-R1-c1",String.valueOf(coordinations.get(1).second));
+//            Log.d("bluetooth-debug-R1-sor", String.valueOf((racket1.getY() - (2*height/7))));
+            return (this.initialYRacket1 - coordinations.get(2).second) / (coordinations.get(1).second - coordinations.get(2).second);
+        }
+        else if(racketNo == 2){
+//            Log.d("bluetooth-debug-R2-Y", String.valueOf(this.initialYRacket2));
+//            Log.d("bluetooth-debug-R2-X", String.valueOf(this.initialXRacket2));
+//            Log.d("bluetooth-debug-R2-getY",String.valueOf(racket2.getY()));
+//            Log.d("bluetooth-debug-R1-c3",String.valueOf(coordinations.get(3).second));
+            return (this.initialYRacket2 - coordinations.get(3).second) / (coordinations.get(4).second - coordinations.get(3).second);
+        }
+        else if(racketNo == 3){
+//            Log.d("bluetooth-debug-R3-Y", String.valueOf(this.initialYRacket3));
+//            Log.d("bluetooth-debug-R3-X", String.valueOf(this.initialXRacket3));
+//            Log.d("bluetooth-debug-R3-getY",String.valueOf(racket3.getY()));
+//            Log.d("bluetooth-debug-R1-c5",String.valueOf(coordinations.get(3).second));
+            return (this.initialYRacket3 - coordinations.get(5).second) / (coordinations.get(0).second - coordinations.get(5).second);
+        }
+        return 0;
     }
 
 }

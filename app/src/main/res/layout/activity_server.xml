@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ServerActivity">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:id="@+id/b_turn_on"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="turnOn"
+        android:text="turn on bluetooth"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/b_turn_off"
+        android:onClick="turnOff"
+        android:text="turn off bluetooth"
+        app:layout_constraintTop_toBottomOf="@+id/b_turn_on"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/b_discoverable"
+        android:onClick="discoverable"
+        android:text="make discoverable"
+        app:layout_constraintTop_toBottomOf="@+id/b_turn_off"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/b_paired"
+        android:onClick="connect"
+        android:text="connect"
+        app:layout_constraintTop_toBottomOf="@+id/b_discoverable"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:onClick="receive"
+        android:text="receive"
+        app:layout_constraintTop_toBottomOf="@+id/b_paired"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
