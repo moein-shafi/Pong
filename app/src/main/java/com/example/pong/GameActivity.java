@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -88,10 +89,9 @@ public class GameActivity extends AppCompatActivity {
             public void process(byte[] buffer) {
                 if (buffer != null && !isServer){
                     String data = new String(buffer, StandardCharsets.UTF_8);
-                    Log.d("bluetooth-debug", data);
+                    Log.d("bluetooth-debug-data", data);
                     List <String> parsedData = parseData(data);
                     if (parsedData.size() == 8) {
-                        Log.d("bluetooth-debug", "reading 8 data particles");
 
                         ball.setX0ByPercentage(Float.parseFloat(parsedData.get(0)));
                         ball.setY0ByPercentage(Float.parseFloat(parsedData.get(1)));
@@ -180,13 +180,16 @@ public class GameActivity extends AppCompatActivity {
         }, 0, 17);
     }
 
+    private float compactFloat(float f){
+        return Float.parseFloat(new DecimalFormat("##.####").format(f));
+    }
+
     private void sendCoordsToClient() {
-        String data = Float.toString(ball.getXPercentage()) + ',' + ball.getYPercentage() + ',' +
-
-                      hexaView.pixelToPercentageRacket(1) + ',' +
-                      hexaView.pixelToPercentageRacket(2) + ',' +
-                      hexaView.pixelToPercentageRacket(3) + ',' +
-
+        String data = "" + compactFloat(ball.getXPercentage()) + ',' +
+                      compactFloat(ball.getYPercentage()) + ',' +
+                      compactFloat(hexaView.pixelToPercentageRacket(1)) + ',' +
+                      compactFloat(hexaView.pixelToPercentageRacket(2)) + ',' +
+                      compactFloat(hexaView.pixelToPercentageRacket(3)) + ',' +
                       player1.getScore() + ',' + player2.getScore() + ',' + player3.getScore();
 
         bluetoothService.getChannel().sendString(data);
