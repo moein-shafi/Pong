@@ -55,7 +55,9 @@ public class BluetoothService extends Service {
 
     private AcceptThread acceptThread;
     private ConnectThread connectThread;
-    private ConnectedThread connectedThread;
+
+    private ConnectedThread connectedThread1;
+    private ConnectedThread connectedThread2;
 
 
     @Override
@@ -78,9 +80,14 @@ public class BluetoothService extends Service {
             connectThread = null;
         }
 
-        if (connectedThread != null) {
-            connectedThread.cancel();
-            connectedThread = null;
+        if (connectedThread1 != null) {
+            connectedThread1.cancel();
+            connectedThread1 = null;
+        }
+
+        if (connectedThread2 != null) {
+            connectedThread2.cancel();
+            connectedThread2 = null;
         }
 
         if (btSocket != null) {
@@ -120,7 +127,7 @@ public class BluetoothService extends Service {
     }
 
     public boolean isConnected() {
-        return connectedThread != null;
+        return connectedThread1 != null;
     }
 
     public BluetoothAdapter getBluetoothAdapter() {
@@ -196,12 +203,19 @@ public class BluetoothService extends Service {
 
         public void send(byte[] bytes) {
 
-            if(connectedThread == null)
-                return;
-            synchronized (connectedThread) {
-                byte[] buffer = new byte[bytes.length];
-                System.arraycopy(bytes, 0, buffer, 0, bytes.length);
-                connectedThread.write(buffer);
+            if (connectedThread1 != null) {
+                synchronized (connectedThread1) {
+                    byte[] buffer = new byte[bytes.length];
+                    System.arraycopy(bytes, 0, buffer, 0, bytes.length);
+                    connectedThread1.write(buffer);
+                }
+            }
+            if(connectedThread2 != null) {
+                synchronized (connectedThread2) {
+                    byte[] buffer = new byte[bytes.length];
+                    System.arraycopy(bytes, 0, buffer, 0, bytes.length);
+                    connectedThread2.write(buffer);
+                }
             }
         }
     }
@@ -249,8 +263,16 @@ public class BluetoothService extends Service {
 
         onConnected.success();
 
-        connectedThread = new ConnectedThread();
-        connectedThread.start();
+        if (connectedThread1 == null) {
+            Log.d("bluetooth-debug","thread 111 is null");
+            connectedThread1 = new ConnectedThread();
+            connectedThread1.start();
+        } else {
+            connectedThread2 = new ConnectedThread();
+            connectedThread2.start();
+        }
+
+
     }
 
     private class AcceptThread extends Thread {
