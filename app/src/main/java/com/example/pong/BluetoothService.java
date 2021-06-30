@@ -21,8 +21,8 @@ import java.util.Arrays;
 public class BluetoothService extends Service {
 
     private static final String TAG = "BluetoothService";
-    private static final UUID MY_UUID = UUID.fromString("27e86a38-a29c-421e-9d17-fe9c0c3bf2e6");
-    //TODO check UUID
+    private static final UUID MY_UUID = UUID.fromString("31a85a63-b17c-213e-1b40-af1d4d7ed4b9");
+
     private BluetoothAdapter btAdapter;
     private BluetoothSocket btSocket;
 
