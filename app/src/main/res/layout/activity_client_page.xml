@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ServerActivity">
+    tools:context=".ClientActivity">
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,8 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:id="@+id/b_paired"
-        android:onClick="connect"
-        android:text="connect client"
+        android:onClick="discoverable"
+        android:text="Make Discoverable"
         app:layout_constraintTop_toBottomOf="@+id/b_turn_off"/>
 
 

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -55,18 +56,12 @@ public class GameActivity extends AppCompatActivity {
     static TextView player3Score;
     Handler mHandler;
     int lastScore1 = 0, lastScore2 = 0, lastScore3 = 0;
-    MediaPlayer playBackMediaPlayer;
-    MediaPlayer goalMediaPlayer;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_device);
-//        playBackMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.playback);
-//        goalMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.goal);
-//        playBackMediaPlayer.start();
-//        playBackMediaPlayer.setLooping(true);
 
         ImageView ballImage = findViewById(R.id.ball);
 
@@ -81,8 +76,8 @@ public class GameActivity extends AppCompatActivity {
         mHandler = new Handler();
 
         this.ball = new Ball(
-                hexaView.getCenterX(),    // not correct at this point.
-                hexaView.getCenterY(),    // not correct at this point.
+                hexaView.getCenterX(),
+                hexaView.getCenterY(),
                 getRandomV(),
                 getRandomV(),
                 this.ballRadius,
@@ -94,10 +89,9 @@ public class GameActivity extends AppCompatActivity {
             public void process(byte[] buffer) {
                 if (buffer != null && !isServer){
                     String data = new String(buffer, StandardCharsets.UTF_8);
-                    Log.d("bluetooth-debug", data);
+//                    Log.d("bluetooth-debug-data", data);
                     List <String> parsedData = parseData(data);
-                    if (parsedData.size() == 8) {
-                        Log.d("bluetooth-debug", "reading 8 data particles");
+                    if (parsedData.size() == 9) {
 
                         ball.setX0ByPercentage(Float.parseFloat(parsedData.get(0)));
                         ball.setY0ByPercentage(Float.parseFloat(parsedData.get(1)));
@@ -106,39 +100,10 @@ public class GameActivity extends AppCompatActivity {
                         hexaView.setRacketCoordsByPercentage(2,Float.parseFloat(parsedData.get(3)));
                         hexaView.setRacketCoordsByPercentage(3,Float.parseFloat(parsedData.get(4)));
 
-
-//                        ball.getRacket1().setY(Float.parseFloat(parsedData.get(2))); //TODO: percent -> pixel
-////                        ball.getRacket1().setX(Float.parseFloat(parsedData.get(2)));
-//
-//                        ball.getRacket2().setY(Float.parseFloat(parsedData.get(3))); //TODO: percent -> pixel
-//                        ball.getRacket2().setX((Float.parseFloat(parsedData.get(3)) - ball.getBoardLines().get(3).second)/ball.getBoardLines().get(3).first); // x = (y-b)/a
-//
-//                        ball.getRacket3().setY(Float.parseFloat(parsedData.get(4)));
-//                        ball.getRacket3().setX((Float.parseFloat(parsedData.get(4)) - ball.getBoardLines().get(5).second)/ball.getBoardLines().get(5).first); // x = (y-b)/a
-
                         player1.setScore(Integer.parseInt(parsedData.get(5)));
                         player2.setScore(Integer.parseInt(parsedData.get(6)));
                         player3.setScore(Integer.parseInt(parsedData.get(7)));
-
-//                        ball.getRacket1().setStartX(Float.parseFloat(parsedData.get(2)));
-//                        ball.getRacket1().setStopX(Float.parseFloat(parsedData.get(3)));
-//                        ball.getRacket1().setStartY(Float.parseFloat(parsedData.get(4)));
-//                        ball.getRacket1().setStopY(Float.parseFloat(parsedData.get(5)));
-//
-//                        ball.getRacket2().setStartX(Float.parseFloat(parsedData.get(6)));
-//                        ball.getRacket2().setStopX(Float.parseFloat(parsedData.get(7)));
-//                        ball.getRacket2().setStartY(Float.parseFloat(parsedData.get(8)));
-//                        ball.getRacket2().setStopY(Float.parseFloat(parsedData.get(9)));
-//
-//                        ball.getRacket3().setStartX(Float.parseFloat(parsedData.get(10)));
-//                        ball.getRacket3().setStopX(Float.parseFloat(parsedData.get(11)));
-//                        ball.getRacket3().setStartY(Float.parseFloat(parsedData.get(12)));
-//                        ball.getRacket3().setStopY(Float.parseFloat(parsedData.get(13)));
-
-//                        player1.setScore(Integer.parseInt(parsedData.get(14)));
-//                        player2.setScore(Integer.parseInt(parsedData.get(15)));
-//                        player3.setScore(Integer.parseInt(parsedData.get(16)));
-
+                        Log.d("bluetooth-debug-ping", String.valueOf(Long.parseLong(parsedData.get(8)) - System.currentTimeMillis()));
                     }
 
                 }else if( buffer != null && isServer){
@@ -146,13 +111,10 @@ public class GameActivity extends AppCompatActivity {
                     Log.d("bluetooth-debug", "else in server");
                     List <String> parsedData = parseData(data);
                     Log.d("bluetooth-debug-data", data);
-                    if (parsedData.size() == 2) {
-//                        Log.d("bluetooth-debug-parsed", parsedData);
+                    if (parsedData.size() == 2)
                         hexaView.setRacketCoordsByPercentage((int) Float.parseFloat(parsedData.get(0)),Float.parseFloat(parsedData.get(1)));
-                    }
-                } else {
+                } else
                     Log.d("bluetooth-debug","buffer is empty");
-                }
             }
         });
     }
@@ -219,42 +181,19 @@ public class GameActivity extends AppCompatActivity {
         }, 0, 17);
     }
 
+    private float compactFloat(float f){
+        return Float.parseFloat(new DecimalFormat("##.####").format(f));
+    }
+
     private void sendCoordsToClient() {
-        String data = Float.toString(ball.getXPercentage()) + ',' + ball.getYPercentage() + ',' +
+        String data = "" + compactFloat(ball.getXPercentage()) + ',' +
+                      compactFloat(ball.getYPercentage()) + ',' +
+                      compactFloat(hexaView.pixelToPercentageRacket(1)) + ',' +
+                      compactFloat(hexaView.pixelToPercentageRacket(2)) + ',' +
+                      compactFloat(hexaView.pixelToPercentageRacket(3)) + ',' +
+                      player1.getScore() + ',' + player2.getScore() + ',' + player3.getScore()+ ',' +
+                      System.currentTimeMillis();
 
-//        Log.d("bluetooth-debug", data);
-//        String data = "" + ball.pixelToPercentageX(ball.getX0()) + ',' + ball.pixelToPercentageY(ball.getY0()) + ',' +
-
-                         hexaView.pixelToPercentageRacket(1) + ',' +
-//                      ball.pixelToPercentageRacket(ball.getRacket1().getStopX(),1) + ',' +
-//                      ball.pixelToPercentageRacket(ball.getRacket1().getStartY(),1) + ',' +
-//                      ball.pixelToPercentageRacket(ball.getRacket1().getStopY(),1) + ',' +
-
-
-                      hexaView.pixelToPercentageRacket(2) + ',' +
-//                      ball.pixelToPercentageRacket(ball.getRacket2().getStopX(),2) + ',' +
-//                      ball.pixelToPercentageRacket(ball.getRacket2().getStartY(),2) + ',' +
-//                      ball.pixelToPercentageRacket(ball.getRacket2().getStopY(),2) + ',' +
-
-
-                      hexaView.pixelToPercentageRacket(3) + ',' +
-//                      ball.pixelToPercentageRacket(ball.getRacket3().getStopX(),3) + ',' +
-//                      ball.pixelToPercentageRacket(ball.getRacket3().getStartY(),3) + ',' +
-//                      ball.pixelToPercentageRacket(ball.getRacket3().getStopY(),3) + ',' +
-
-                      player1.getScore() + ',' + player2.getScore() + ',' + player3.getScore();
-
-
-//                      ball.getRacket1().getStartY() + ',' + ball.getRacket1().getStopY() + ',' +
-//                      ball.getRacket2().getStartX() + ',' + ball.getRacket2().getStopX() + ',' +
-//                      ball.getRacket2().getStartY() + ',' + ball.getRacket2().getStopY() + ',' +
-
-//                ball.getRacket3().getStartX() + ',' + ball.getRacket3().getStopX() + ',' +
-//                      ball.getRacket3().getStartY() + ',' + ball.getRacket3().getStopY() + ',' +
-
-
-//        data += Integer.toString(lastScore1) + ',' + Integer.toString(lastScore2) + ',' + Integer.toString(lastScore3);
-        //TODO: add scores
         bluetoothService.getChannel().sendString(data);
     }
 
@@ -266,9 +205,6 @@ public class GameActivity extends AppCompatActivity {
                 findViewById(R.id.goal).setVisibility(View.INVISIBLE);
                 ball.setVx0(getRandomV());
                 ball.setVy0(getRandomV());
-//                playBackMediaPlayer.seekTo(0);
-//                playBackMediaPlayer.start();
-//                goalMediaPlayer.pause();
             }
         },3000);
     }
@@ -288,7 +224,6 @@ public class GameActivity extends AppCompatActivity {
                     TextView score3View = findViewById(R.id.score_ply3);
                     score3View.setText(String.format("score: %d", player3.getScore()));
 
-
                     lastScore1 = player1.getScore();
                     lastScore2 = player2.getScore();
                     lastScore3 = player3.getScore();
@@ -298,32 +233,15 @@ public class GameActivity extends AppCompatActivity {
                     ball.setY0(hexaView.getCenterY());
 
                     findViewById(R.id.goal).setVisibility(View.VISIBLE);
-//                    playBackMediaPlayer.pause();
-//                    goalMediaPlayer.seekTo(0);
-//                    goalMediaPlayer.start();
                     stopGoal();
                 }
             }
         });
     }
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if (playBackMediaPlayer.isPlaying()) {
-//            playBackMediaPlayer.stop();
-//            playBackMediaPlayer.release();
-//        }
-//        if (goalMediaPlayer.isPlaying()) {
-//            goalMediaPlayer.stop();
-//            goalMediaPlayer.release();
-//        }
-//    }
-
     public void racketButton1Left(View view) {
         HexagonMaskView view2 = findViewById(R.id.hexagonBoard);
         view2.racket1Left();
-
     }
 
     public void racketButton1Right(View view) {
@@ -337,7 +255,6 @@ public class GameActivity extends AppCompatActivity {
         if (!isServer){
             sendNewRacketPosition(2);
         }
-
     }
 
     public void racketButton2Right(View view) {
